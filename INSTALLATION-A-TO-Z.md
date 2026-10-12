@@ -1,0 +1,237 @@
+# Celia Files: installation from A to Z
+
+This guide takes a new operator from an unconfigured Windows computer to a tested ChatGPT connection. Read [PROJECT-EXPLAINED.md](PROJECT-EXPLAINED.md) first for the purpose, architecture and limits.
+
+All commands below are for **Command Prompt**, unless stated otherwise. Do not paste your API secret into commands, ChatGPT, screenshots, GitHub or these documents. The setup command needs a tunnel ID; the secret belongs only in Celia's masked input window.
+
+## Before you begin: the whole path
+
+Read the explanation → check Windows and account eligibility → download the source → install Python → choose folders → create a tunnel → create a private runtime key → run Install.cmd → turn the tray ON and enter the key → add Celia Files in ChatGPT → test file operations and OFF/ON.
+
+| Term | What it means here |
+| --- | --- |
+| Platform organization | The OpenAI account context that owns the tunnel and grants tunnel permissions |
+| ChatGPT workspace | The personal or organizational ChatGPT context where you install the Celia Files plugin |
+| Tunnel ID | Identifier beginning with `tunnel_`; setup uses it to select your connection |
+| API secret | Private credential beginning with `sk-`; enter it only in the masked connection dialog |
+| Root alias | Short name such as Vault that refers to a selected local folder |
+| MCP plugin | The installed ChatGPT connection exposing Celia's tools |
+
+You provide three installation-specific inputs: your own tunnel ID, your private runtime key and the folders you want to authorize. The repository deliberately contains no working account credential. If your account cannot use tunnels/custom MCP connections, local installation alone cannot complete the connection.
+
+## 1. Understand what “ready” means
+
+The package is prepared for installation on Windows x64 with Python 3.12. Its local installer and automated checks passed in an isolated installation, as recorded in VALIDATION.md. Complete the acceptance checklist in section 11 to verify your own computer and account.
+
+OpenAI account access is separate from Windows installation. You must be able to create/use your own tunnel and add a custom MCP plugin. Your computer must stay awake, online and connected for local file calls to work. This is a source package with an installer, rather than a standalone signed Windows executable.
+
+## 2. Prepare the computer and installation location
+
+1. Use a Windows **x64** computer and a normal Windows user account that can write to the chosen installation and data folders. ARM64 and 32-bit installations are not validated by this release.
+2. Use an ordinary local folder you own. Avoid Program Files, network shares, cloud placeholders, symbolic links and junctions.
+3. Make sure internet access allows Python package downloads, GitHub release downloads and the OpenAI connection. On a managed computer, have IT review the requirements rather than changing company restrictions.
+4. On this GitHub repository's main page, choose the green **Code** button, then **Download ZIP**. You do not need to create a GitHub account to download a public repository. Alternatively, use a separately supplied `celia-files-source.zip`.
+5. In File Explorer, open Downloads, right-click the downloaded ZIP and choose **Extract All**. Extract into a permanent user-writable local folder. Open the extracted top-level folder, usually named `Celia-main` for this repository's GitHub download or `celia-files` for the source package. You should see `Install.cmd`, `Start-Celia.cmd`, `setup.py`, `service` and `assets` together. That is the installation folder. Do not run files inside the unopened ZIP.
+6. Keep this folder in its final location. The generated profile and shortcuts use absolute paths. Moving it later requires reinstallation/reconfiguration.
+
+Git, Codex and n8n are not required to install or run this package. A browser and your own ChatGPT account are required for the ChatGPT connection.
+
+**Checkpoint:** the extracted folder contains the source files and is writable by your Windows account.
+
+## 3. Install and verify Python
+
+Use a full **Python 3.12 x64** distribution from [python.org Windows downloads](https://www.python.org/downloads/windows/). If it is already installed, run the verification commands below before downloading anything.
+
+For the traditional Python 3.12 installer:
+
+1. On an official Python 3.12 release page with Windows installers, go to **Files** and choose **Windows installer (64-bit)**. Do not choose source code, ARM64, 32-bit or the embeddable ZIP. [Python 3.12.10](https://www.python.org/downloads/release/python-31210/) is the last full maintenance release with the traditional Windows installer; newer security releases may have different distribution options. It is not the latest security patch. An already maintained full 3.12 distribution can also be used after verification.
+2. Open the downloaded installer. Select **Customize installation**.
+3. Keep **pip**, **Tcl/Tk and IDLE**, and the **Python launcher** selected. Continue with installation for your user where available. The installer may request approval for its launcher options; follow your computer's normal installation policy.
+4. Finish installation, close any old Command Prompt windows and open a new one.
+
+The [official Python Windows installation guide](https://docs.python.org/3.12/using/windows.html) explains these components. Celia's double-click installer currently expects `py -3.12` to work. If you use the newer Python install manager, first install the 3.12 runtime through that manager's documented workflow and run the checks below; installing the manager alone is insufficient.
+
+Open Start, type **Command Prompt**, and open it. Run:
+
+```bat
+py -3.12 --version
+py -3.12 -c "import struct, tkinter, venv; print('Python bits:', struct.calcsize('P') * 8); print('Required modules available')"
+```
+
+Expect Python `3.12.x`, `Python bits: 64`, and `Required modules available`. If `py` is missing, repair/install the launcher and reopen Command Prompt. If tkinter is missing, add Tcl/Tk through the Python installer. A Microsoft Store shortcut that merely offers to install Python is not a working interpreter.
+
+If you have a real Python 3.12 executable but no launcher, substitute its quoted full path for `py -3.12` in setup commands. The installed Celia shortcut will use its private virtual environment directly.
+
+**Checkpoint:** both verification commands succeed before proceeding.
+
+## 4. Plan the folder permissions
+
+This release uses two named roots:
+
+| Alias used by ChatGPT | Purpose | Default location |
+| --- | --- | --- |
+| Projects | Files you choose to work on | `celia-files/data/Projects` |
+| Vault | Markdown notes and durable project context | `celia-files/data/Vault` |
+
+Both receive direct read, write, create, edit, move and recoverable delete permissions. Windows file permissions and application path checks still apply. A request in ChatGPT may also require approval under ChatGPT's own controls; a local setting does not override those controls.
+
+For a first installation, use the empty defaults and add a few disposable sample files. For existing work, choose two specific non-overlapping folders. Back up valuable files before giving an assistant write access. Do not select an entire drive, Windows profile, the application folder or a folder containing keys and passwords. Keep Projects, Vault and the installation on the **same drive** if you need recoverable deletion: recovery uses a rename into private local storage on the installation's drive.
+
+**Checkpoint:** you know exactly which folders will be available and have copies of valuable data.
+
+## 5. Create the OpenAI tunnel
+
+First sign in to [ChatGPT](https://chatgpt.com/) and note whether you are using your personal workspace or an organization workspace. Then sign in to [OpenAI Platform](https://platform.openai.com/) using the intended account. If you do not have an account, complete OpenAI's own signup first. There is no account registration or purchase inside Celia's installer.
+
+Before continuing, check that Platform exposes tunnel settings and that ChatGPT exposes **Add custom MCP server** in its Plugins area. A ChatGPT subscription by itself does not establish both permissions. Resolve missing access before spending time on the local installation. Names and availability may change; the official guides linked below govern account setup.
+
+1. Sign in to [Platform tunnel settings](https://platform.openai.com/settings/organization/tunnels).
+2. Select the intended Platform organization by its identity. Do not choose an organization just because it is first in a list.
+3. Use the page's **Create tunnel** action. Enter a recognizable name, for example **Celia Files — this computer**, and a description such as “Private access to selected local Windows folders.” Creating/editing requires **Tunnels Read + Manage**.
+4. In the tunnel's organization/workspace associations, include its owning Platform organization and the ChatGPT workspace you noted above. Select your own workspace when personal accounts are offered; verify its identity rather than copying someone else's workspace ID. Save the associations. If the page creates the tunnel before offering association editing, open its details and edit those associations there.
+5. Copy the `tunnel_...` ID. Setup expects 32 lowercase letters/digits after the prefix. Give each computer its own tunnel to avoid competing clients.
+
+If access or workspace association is unavailable, resolve it with the account/workspace administrator before continuing. [Official OpenAI tunnel guide](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
+
+**Checkpoint:** you have your own tunnel ID and the correct workspace association. The placeholder in config.example.json is not a real tunnel.
+
+## 6. Create the private runtime credential
+
+1. Open [Platform API keys](https://platform.openai.com/settings/organization/api-keys) in the intended organization/project.
+2. Use **Create new secret key** (or the equivalent key-creation action). Name the key **Celia API**. Select the project/account context intended for this tunnel. A project selection is not an instruction to install software with that project's name.
+3. Choose **Restricted** permissions and enable the tunnel runtime permissions **Read + Use**. Leave unrelated model/resource permissions disabled. The organization must also grant the required tunnel access; a key cannot elevate an account that lacks it. If the page uses a different permission editor, use its equivalent tunnel runtime scope and consult the official guide rather than granting all permissions.
+4. Create the key and privately copy the secret when shown. Preserve it in storage you control before dismissing the dialog, because the complete secret may not be displayed again. The name “Celia API” is a label; the secret is the long value beginning with `sk-`.
+5. Do not use an organization admin key or enable model inference permissions for this file connection. A project label such as n8n does not add an n8n dependency.
+
+If the required permission is absent, resolve it before connecting. Celia cannot grant itself account access. [Official permissions explanation](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
+
+**Checkpoint:** a suitable runtime secret is available privately. It has not been added to source files or shared in a conversation.
+
+## 7. Install the local software
+
+### Option A: simplest installation with empty default folders
+
+Double-click **Install.cmd** inside the extracted folder. At `Your tunnel ID (not an API secret):`, paste your tunnel ID and press Enter. Do not enter the secret key here.
+
+The installer creates an isolated environment under `service/.venv`, installs the tested dependency versions, downloads the official tunnel client, verifies its archive checksum, prepares the profile and folder configuration, creates vault starter files, checks the local launcher and creates the **Celia Switch** shortcuts. It does not connect to a live account or ask for the API key.
+
+Wait for **Local installation ready**. The installation window can then close.
+
+### Option B: specify your own folders and optional login icon
+
+Open the extracted `celia-files` folder in File Explorer. Click its address bar, type `cmd`, and press Enter. Command Prompt opens in that folder. Run:
+
+```bat
+py -3.12 setup.py --projects "C:\CeliaData\Projects" --vault "C:\CeliaData\Vault" --shortcuts --startup
+```
+
+Replace the example paths with user-writable folders on the installation's drive. Setup creates missing folders; it preserves existing vault starter files. Enter your tunnel ID when asked. Omit `--startup` if you do not want an icon at Windows login. Login startup starts the icon **OFF**, not an authenticated connection.
+
+You can instead supply `--tunnel-id YOUR_ACTUAL_TUNNEL_ID` on the command line. A tunnel ID is not the secret. An optional `--plugin-url` can be set later to your plugin's ChatGPT URL.
+
+### If installation fails
+
+Read the first error, resolve it using [TROUBLESHOOTING.md](TROUBLESHOOTING.md), and retry. Python dependencies and the tunnel download need internet access. Do not bypass a checksum mismatch or solve unrelated errors by changing PowerShell execution policy.
+
+If setup says **Already configured**, inspect `service/config.json`. To intentionally rerun setup, turn OFF and exit any Celia tray, then add `--replace-config`, preserving all desired folder arguments. Omitting custom folder arguments during reconfiguration selects the defaults again. Never add a key to config.json.
+
+**Checkpoint:** Local installation ready was printed and the shortcut exists. No live connection has started yet.
+
+## 8. Start the tray and connect
+
+1. Open **Celia Switch** on the Desktop, or double-click **Start-Celia.cmd** in the installation folder.
+2. The small Celia panel and tray icon should appear. If the icon is hidden, check the arrow near the clock.
+3. Click the switch. In the masked **Celia API key** dialog, paste the actual secret with **Ctrl+V** and confirm. Nothing visible in the field does not imply a failed paste: characters are hidden.
+4. Wait for green **Connected** and **Connected in the background**. Amber means it is starting; red means attention is needed. Use **Connection log** to inspect failures locally.
+5. Choose **Hide** or close the panel. This hides the panel while the tray remains running. Choose **Exit** from the tray menu to stop everything.
+
+The secret is held in memory for the application session. OFF stops the tunnel but keeps the cached secret for a later ON in that session. Exit, a process restart or reboot requires entering it again. Do not run a foreground terminal launcher alongside the tray for the same tunnel.
+
+**Checkpoint:** green status is visible before you add or discover the plugin in ChatGPT.
+
+## 9. Add the connection to ChatGPT
+
+Use ChatGPT on the web while Celia is green:
+
+1. Open [ChatGPT Plugins](https://chatgpt.com/plugins) in the workspace associated with your tunnel.
+2. Select **+**, then **Add custom MCP server**.
+3. Name it **Celia Files** and choose **Tunnel** under Connection. Select your tunnel or enter its ID.
+4. This bundled stdio server has no separate OAuth server; choose **No authentication** for the server interface where offered. The tunnel itself still uses the private runtime credential and OpenAI account permissions. Do not paste that runtime credential into an OAuth field.
+5. Review the permissions and risk notice, then create and install the plugin.
+6. In a conversation, type **@** and select your installed **Celia Files** plugin.
+
+Workspace restrictions may prevent these steps. Follow the current [official custom MCP instructions](https://developers.openai.com/api/docs/guides/custom-mcp-server) if labels change.
+
+**Checkpoint:** Celia Files is installed, selectable in a conversation and can discover its tools.
+
+## 10. Perform a disposable end-to-end test
+
+Send these requests one at a time in a conversation with Celia Files selected. Wait for a successful tool result at each stage.
+
+1. “Use Celia Files to call list_roots and read Vault/INDEX.md. Tell me the configured root aliases.” Confirm the roots match your selections.
+2. “Create Vault/Inbox/celia-install-check.txt containing `hello`.” Verify it appears in File Explorer.
+3. “Read that file using Celia Files.” Expect `hello` from a fresh tool call.
+4. “Edit that file, replacing `hello` with `ready`.” Open it locally and confirm `ready`.
+5. “Move it to Vault/Inbox/celia-install-check-renamed.txt.” Confirm the new name and absence of the old name.
+6. “Delete only that renamed test file using Celia Files and return its deletion_id.” Save the returned ID. Confirm the file disappears from its original folder.
+7. “Restore that test file using restore_deleted and the deletion_id you returned.” Confirm it reappears. The original location must be unused and its parent must exist.
+8. “Delete only the test file again.” Keep the deletion record if you want to retain the test's recovery option.
+9. Switch OFF. Ask for a fresh read of Vault/INDEX.md and confirm that the local connection is unavailable. A repeated answer from conversation context is not a successful test.
+10. Switch ON and request the read again. Confirm a fresh tool call succeeds.
+
+Do not test deletion with existing valuable files. Recovery data is not the Windows Recycle Bin. If ChatGPT asks for confirmation under its own permissions, complete that review yourself.
+
+## 11. Verify and record your installation
+
+Fill this table after testing. This is the evidence needed to call your installation ready.
+
+| Check | Result to record |
+| --- | --- |
+| Windows architecture and Python | x64 and Python version |
+| Local installer | Completed successfully |
+| Roots | Actual Projects/Vault folders reviewed |
+| Connection | Green in the tray |
+| ChatGPT discovery | Celia Files selectable and tools available |
+| File operations | Create, read, edit, move, delete and restore passed |
+| OFF/ON | Fresh calls fail OFF and work ON |
+| Panel close | Connection remains available while panel is hidden |
+| Exit | Tray and connection stop; reopening requests the secret |
+| Login, if configured | Icon appears OFF |
+
+Keep results private if they include personal paths or account details. For maintainers, the automated verification commands are in README.md. Run those only with disposable configured folders. GitHub checks cannot establish another person's ChatGPT access.
+
+## 12. Use Celia every day
+
+Open the switch, turn ON, enter the key if requested, and select Celia Files in ChatGPT. Begin work by asking it to read the relevant project notes. For durable continuity, explicitly ask it to save decisions and next actions in Vault Markdown and link them from INDEX.md. Files stored on disk provide continuity; Celia does not automatically remember unsaved conversations.
+
+When finished, turn OFF. You can leave the tray available or Exit to discard its cached key. The computer must remain powered, awake and online while you use the connection. Closing the browser does not automatically stop the local tray. An idle green connection remains available but does not autonomously read every file.
+
+## 13. Recover files and protect recovery history
+
+`delete_file` returns a `deletion_id`; use `restore_deleted` with that ID while connected. Recovery storage is `service/.runtime/trash`. Restoring requires the original location to be free and its parent folder to exist. Nonempty-folder deletion needs `recursive=true`, and all contained paths must pass policy checks.
+
+Overwrites produce a separate `backup_id` and save the former contents under `service/.runtime/backups`. There is no backup-restore MCP tool in this release. Turn OFF and exit, inspect the relevant `record.json` locally, copy `original.bin` to a separate recovery location, and verify it before replacing the intended file. Do not ask ChatGPT to access private runtime storage by expanding its roots.
+
+Neither backup nor trash is an independent backup of your disk. Preserve it when migrating or uninstalling if you may need recovery. It can contain sensitive file contents and is intentionally excluded from GitHub uploads.
+
+## 14. Change folders, keys or computers
+
+For a folder/tunnel change, turn OFF, Exit and rerun setup with **all** desired options plus `--replace-config`. Verify the new roots and repeat the disposable test. Old data is not automatically moved. Keep recovery records and the original folders until no longer needed.
+
+For a leaked/replaced key, revoke the old secret in Platform, create a replacement, Exit Celia, reopen it and enter the replacement privately. Editing or deleting a chat message does not revoke a credential.
+
+For another computer, transfer the **source ZIP**, install its own Python environment and create a separate tunnel/runtime credential. Transfer selected project/vault files separately if you want their contents there. Do not copy `.venv`, `config.json`, generated profiles or shortcuts and expect them to work unchanged. Turn off the old connection before retiring the old computer.
+
+## 15. Uninstall without losing your work
+
+1. Turn OFF and **Exit** the tray.
+2. Preserve your Projects, Vault and any needed recovery history. The default data folders live inside the installation, so deleting that installation would also delete those files.
+3. Remove the **Celia Switch** Desktop shortcut. If startup was enabled, press Win+R, enter `shell:startup`, and remove only the Celia Switch shortcut.
+4. Remove or disconnect the Celia Files plugin in ChatGPT. Revoke a dedicated key and remove the dedicated tunnel in Platform when you no longer need them.
+5. Once your data is preserved, remove the local installation folder using File Explorer. Other separately configured folders stay wherever you placed them.
+
+Python can remain installed for other software. There is no Celia Windows service, paid model integration or n8n workflow to remove.
+
+## 16. Share the project
+
+Follow [PUBLISHING.md](PUBLISHING.md). Publish the sanitized source package, choose a license and run the included Windows workflow. Never upload your live installation folder, working vault, API secrets or runtime recovery files. Read [SECURITY.md](SECURITY.md) for the application's actual security boundaries and [VALIDATION.md](VALIDATION.md) for what has and has not been tested.

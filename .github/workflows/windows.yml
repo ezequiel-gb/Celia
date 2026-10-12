@@ -1,0 +1,22 @@
+name: Windows verification
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Install without credentials or shortcuts
+        run: python setup.py --tunnel-id tunnel_00000000000000000000000000000000
+      - name: File policy and real stdio MCP protocol
+        run: .\service\.venv\Scripts\python.exe service/test_service.py
+      - name: Tray lifecycle
+        run: .\service\.venv\Scripts\python.exe service/test_tray.py
+      - name: Hidden Windows process tree shuts down
+        run: .\service\.venv\Scripts\python.exe service/tray.py --self-test

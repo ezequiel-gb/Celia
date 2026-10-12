@@ -1,0 +1,14 @@
+# Local credentials, configuration and user data never belong in source control.
+service/config.json
+service/.runtime/
+service/.venv/
+data/
+tools/
+*.lnk
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.log
+*.zip
+dist/

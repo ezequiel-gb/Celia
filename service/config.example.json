@@ -1,0 +1,10 @@
+{
+  "tunnel_id": "tunnel_00000000000000000000000000000000",
+  "plugin_url": "https://chatgpt.com/plugins",
+  "read_only": false,
+  "direct_operations": true,
+  "roots": {
+    "Vault": {"path": "C:/CeliaData/Vault", "writable": true},
+    "Projects": {"path": "C:/CeliaData/Projects", "writable": true}
+  }
+}
