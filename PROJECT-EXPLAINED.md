@@ -18,9 +18,11 @@ A Markdown vault adds durable context. Project notes, decisions and next actions
 | tunnel-client | Run the private connection and invoke the MCP server | Windows background process |
 | Celia MCP server | Expose the 14 tools and enforce file policy | Local Python process |
 | Celia tray switch | Start, check and stop the local connection | Windows icon and small control panel |
-| Projects and Vault | Store the files you authorize | Selected local directories |
+| Projects and Vault | Store the files you authorise | Selected local directories |
 
 MCP means Model Context Protocol, the interface used to describe tools and exchange calls/results. “Celia API” is the runtime credential's name. This package does not create a separate public REST API or a new AI model.
+
+ChatGPT supplies the AI responses in your conversation. The local programme handles files; it does not call a paid model API. The Platform key authenticates the tunnel connection. Creating that key is not purchasing API credits. For the distinction between ChatGPT Plus, tunnel access and unresolved tunnel pricing, read [Does Celia Files cost anything?](README.md#does-celia-files-cost-anything) and the guide's [account checks](INSTALLATION-A-TO-Z.md#costs-keys-and-chatgpt-plus-access).
 
 ```text
 You request work in ChatGPT
@@ -48,7 +50,7 @@ The tray controls availability. ON starts the local tunnel and server. Hiding th
 
 The 14 tools cover root/directory listing, document reads, search, paginated binary reads, direct writes and text edits, folder creation, within-root moves, recoverable deletion/restoration and optional proposed changes. The exact implementation is in `service/server.py` and `service/engine.py`.
 
-The server extracts text from PDF, DOCX, ODT and XLSX files and reads ordinary text/code files. It does not provide OCR or rich-document layout editing. Binary writes must contain valid bytes for the intended format. File write/read limits and format behavior are in README.md.
+The server extracts text from PDF, DOCX, ODT and XLSX files and reads ordinary text/code files. It does not provide OCR or rich-document layout editing. Binary writes must contain valid bytes for the intended format. File write/read limits and format behaviour are in README.md.
 
 There is no direct copy-file tool; a client could read and write permitted file contents within the size limits. Proposed changes remain pending until reviewed locally. For example, run `service\.venv\Scripts\python.exe service/review.py` to list pending requests, then rerun it with a request ID to review and explicitly apply or reject it.
 
@@ -68,4 +70,4 @@ Those capabilities would require their own implementation, configuration and val
 
 Start with [INSTALLATION-A-TO-Z.md](INSTALLATION-A-TO-Z.md). Source and configuration examples are portable; actual folder paths, tunnel IDs, credentials and shortcuts are generated separately for each computer. No personal documents or live account settings are included.
 
-The installer creates the local environment and downloads required dependencies. Each operator completes their own OpenAI account setup and live ChatGPT test. The package passed the checks recorded in VALIDATION.md; a second computer has not yet been certified. The code makes no model inference requests or credit purchases, and external account eligibility/costs must be checked separately.
+The installer creates the local environment and downloads required dependencies. Each operator completes their own OpenAI account setup and live ChatGPT test. [VALIDATION.md](VALIDATION.md) records successful local and fresh GitHub Windows-runner checks. Those tests do not establish another person's ChatGPT Plus/write permissions or account-specific billing terms. Use the linked account checks before installation and the disposable acceptance test afterwards.

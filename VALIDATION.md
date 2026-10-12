@@ -15,6 +15,8 @@ Verified on 2026-10-13 on the existing Windows x64 computer using Python 3.12.14
 
 The working original installation's ChatGPT connection was previously tested separately. This release verification does not use its credentials, tunnel or data. It does not create a new OpenAI tunnel or test ChatGPT account eligibility for another user.
 
+The original operator reported a personal ChatGPT Plus subscription and completed live read/write acceptance tests. This is account-specific evidence, not a guarantee of Plus eligibility. The checks below do not audit an OpenAI billing ledger or establish that tunnel traffic has a zero tariff. The documentation's current [costs and eligibility review](INSTALLATION-A-TO-Z.md#costs-keys-and-chatgpt-plus-access) separates those unresolved questions from verified application behaviour.
+
 ## Fresh GitHub Windows runner
 
 The published repository also passed [Windows verification run 38319770042](https://github.com/ezequiel-gb/Celia/actions/runs/38319770042) for source commit `f5902c9e7fce54c64a3cf189d788213a0365fed1`.

@@ -4,20 +4,71 @@ This guide takes a new operator from an unconfigured Windows computer to a teste
 
 All commands below are for **Command Prompt**, unless stated otherwise. Do not paste your API secret into commands, ChatGPT, screenshots, GitHub or these documents. The setup command needs a tunnel ID; the secret belongs only in Celia's masked input window.
 
+## Costs, keys and ChatGPT Plus access
+
+### Six things that sound similar but do different jobs
+
+| Term | What it means for this installation |
+| --- | --- |
+| ChatGPT Plus | Your existing ChatGPT subscription. Conversations using Celia still have the applicable ChatGPT message/model/tool limits. It is not a balance of API credits. |
+| OpenAI Platform account | The account settings used to manage the tunnel and its permissions. Signing in here is separate from choosing to activate paid API billing. |
+| API key | A secret access credential, similar in purpose to a password. Celia passes it to the tunnel client to authenticate the connection. Creating a key is not a model request, credit purchase or subscription checkout. |
+| Paid model API usage | Software asking an OpenAI model to generate an answer through an API, outside this ChatGPT conversation route. Celia Files does not make those requests. |
+| Secure MCP Tunnel | The connection carrying file-tool requests between ChatGPT and the local file service. It is not the AI model answering you. |
+| ChatGPT usage limits | The allowances for the ChatGPT features you use. Connecting Celia does not give you unlimited model use or a separate allowance. |
+
+OpenAI documents [separate ChatGPT/API billing](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform), [Plus usage limits](https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus) and [app usage limits](https://help.openai.com/en/articles/11487775-connected-apps-in-chatgpt). Do not confuse this file connection with a different application that calls the model API or implements Sign in with ChatGPT plan sharing.
+
+### What we verified, concluded and could not establish
+
+Checked on **13 October 2026**. This describes the published Celia Files v0.2.0 path, not future integrations or another application using the same account.
+
+| Question | Finding and confidence |
+| --- | --- |
+| Does Celia charge for installing or running its software? | **Verified in this project:** there is no software fee, payment screen, credit purchase or subscription mechanism. Your own computer/internet costs remain yours. |
+| Does Celia make paid model API calls? | **Verified by source review:** no model inference endpoint/client is called by the installer, file server or controller. The key is passed to the tunnel client, not to a model API. |
+| Does creating a key automatically buy AI usage? | **Reasonable conclusion from the credential-only workflow:** creating a credential is not purchasing credits or requesting a model response. Using it with a separately billable service is a different action. Keep its permissions limited to the tunnel. |
+| Are tunnel creation, authentication and operation definitely free? | **Unresolved:** the [tunnel guide](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels) and [pricing page](https://developers.openai.com/api/docs/pricing) do not publish a tunnel-specific tariff or explicitly guarantee zero charges. We cannot conclusively classify tunnel traffic as billable or non-billable from those pages. Missing pricing is not a permanent free-service promise. |
+| Must I buy API credits or add a card? | **No purchase/card step is prescribed here.** The published tunnel prerequisites do not list prepaid credits or a payment method. That does not establish that every account can be provisioned without a billing requirement. If your account asks to activate billing, obtain tunnel-specific clarification before accepting; do not buy credits just to follow this guide. |
+| Which allowance does a Celia conversation use? | **Verified product distinction:** ChatGPT conversations remain subject to ChatGPT's allowances; app/provider limits may also apply. **Code-based conclusion:** Celia generates no API model-token usage to debit API credits. This does not settle the separate tunnel-pricing question above. |
+
+OpenAI's [MCP API guide](https://developers.openai.com/api/docs/guides/tools-connectors-mcp) describes model-token billing when developers call MCP through the **Responses API**, with no extra per-tool-call fee in that API flow. Those paid model-request examples are not part of Celia's ChatGPT installation and are not a tunnel-wide pricing guarantee. Do not run them as a connection test.
+
+### Can I use it with my personal Plus account?
+
+The [custom MCP server guide](https://developers.openai.com/api/docs/guides/custom-mcp-server) describes read/write plugins and workspace restrictions but does not provide a Plus-specific entitlement guarantee. The [Help Centre developer-mode guide](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt) currently assigns full MCP write/modify beta access to Business, Enterprise and Edu, and describes Pro read/fetch access. It does not establish full personal Plus support.
+
+The maintainer's personal Plus setup previously completed Celia read/write tests. That is an observation about one account, not a promise that every Plus account has the same access. Confirm that **your** ChatGPT web account offers **Add custom MCP server → Tunnel** and permits the required actions. A visible plugin menu alone is not evidence that editing/deletion is enabled. Finish the disposable read/write test in section 10 before relying on it for real work.
+
+If the connection or write actions are unavailable, check the account/workspace permissions or ask OpenAI Support. Paying for API credits does not grant ChatGPT plugin or write permissions. This guide does not recommend purchasing credits or upgrading your ChatGPT plan to resolve unverified eligibility.
+
+### Check billing and usage without buying anything
+
+1. Sign in to [OpenAI Platform billing](https://platform.openai.com/account/billing/overview). Select the organisation owning your tunnel and review its billing status, payment methods and any existing prepaid/automatic recharge settings. **Viewing this page is a check, not a purchase.** Do not select Add payment method, Buy credits or enable automatic recharge as part of Celia setup.
+2. Open the [Usage Dashboard](https://platform.openai.com/usage). Choose that organisation, the relevant date range and project filters; review activity and spend before/after a disposable connection test. Other applications in the same organisation may contribute usage. A zero model-token total does not prove that every possible charge is zero.
+3. If those pages are unavailable, ask the organisation owner for a review. Dashboard visibility is a separate permission. See [OpenAI's usage explanation](https://help.openai.com/en/articles/10478918-reviewing-api-usage-and-costs).
+4. To review your existing ChatGPT subscription, open **ChatGPT → Settings → Billing**; it is a separate account view. See [OpenAI's billing instructions](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform).
+
+If you see an explicit charge or billing activation requirement that you did not intend, pause before accepting it and ask OpenAI Support about **Secure MCP Tunnel for a ChatGPT connection**, not paid API model access. This documentation cannot inspect your account-specific contract or billing state.
+
+### Required and optional steps
+
+**Required:** supported Windows/Python, selected folders, tunnel permissions/ID, a private runtime key, a working local connection and ChatGPT permission to use it. **Optional:** your own alternative data folders, starting the tray OFF at login, a customised plugin URL and maintainer-only automated tests. **Not prescribed:** buying API credits, adding payment details, enabling automatic recharge, running paid API model examples or taking an additional subscription. If your account presents different prerequisites, clarify them rather than treating an optional purchase as mandatory.
+
 ## Before you begin: the whole path
 
 Read the explanation → check Windows and account eligibility → download the source → install Python → choose folders → create a tunnel → create a private runtime key → run Install.cmd → turn the tray ON and enter the key → add Celia Files in ChatGPT → test file operations and OFF/ON.
 
 | Term | What it means here |
 | --- | --- |
-| Platform organization | The OpenAI account context that owns the tunnel and grants tunnel permissions |
-| ChatGPT workspace | The personal or organizational ChatGPT context where you install the Celia Files plugin |
+| Platform organisation | The OpenAI account context that owns the tunnel and grants tunnel permissions |
+| ChatGPT workspace | The personal or organisational ChatGPT context where you install the Celia Files plugin |
 | Tunnel ID | Identifier beginning with `tunnel_`; setup uses it to select your connection |
 | API secret | Private credential beginning with `sk-`; enter it only in the masked connection dialog |
 | Root alias | Short name such as Vault that refers to a selected local folder |
 | MCP plugin | The installed ChatGPT connection exposing Celia's tools |
 
-You provide three installation-specific inputs: your own tunnel ID, your private runtime key and the folders you want to authorize. The repository deliberately contains no working account credential. If your account cannot use tunnels/custom MCP connections, local installation alone cannot complete the connection.
+You provide three installation-specific inputs: your own tunnel ID, your private runtime key and the folders you want to authorise. The repository deliberately contains no working account credential. If your account cannot use tunnels/custom MCP connections, local installation alone cannot complete the connection.
 
 ## 1. Understand what “ready” means
 
@@ -81,14 +132,14 @@ For a first installation, use the empty defaults and add a few disposable sample
 
 ## 5. Create the OpenAI tunnel
 
-First sign in to [ChatGPT](https://chatgpt.com/) and note whether you are using your personal workspace or an organization workspace. Then sign in to [OpenAI Platform](https://platform.openai.com/) using the intended account. If you do not have an account, complete OpenAI's own signup first. There is no account registration or purchase inside Celia's installer.
+First sign in to [ChatGPT](https://chatgpt.com/) and note whether you are using your personal workspace or an organisation workspace. Then sign in to [OpenAI Platform](https://platform.openai.com/) using the intended account. If you do not have an account, complete OpenAI's own signup first. There is no account registration or purchase inside Celia's installer.
 
-Before continuing, check that Platform exposes tunnel settings and that ChatGPT exposes **Add custom MCP server** in its Plugins area. A ChatGPT subscription by itself does not establish both permissions. Resolve missing access before spending time on the local installation. Names and availability may change; the official guides linked below govern account setup.
+Before continuing, complete the [Plus access and billing checks above](#costs-keys-and-chatgpt-plus-access). Platform must offer the necessary tunnel permissions, and ChatGPT must permit the connection/actions you need. This is an access check, not a recommendation to buy API credits. Names and availability may change; the official guides linked below govern account setup.
 
 1. Sign in to [Platform tunnel settings](https://platform.openai.com/settings/organization/tunnels).
-2. Select the intended Platform organization by its identity. Do not choose an organization just because it is first in a list.
-3. Use the page's **Create tunnel** action. Enter a recognizable name, for example **Celia Files — this computer**, and a description such as “Private access to selected local Windows folders.” Creating/editing requires **Tunnels Read + Manage**.
-4. In the tunnel's organization/workspace associations, include its owning Platform organization and the ChatGPT workspace you noted above. Select your own workspace when personal accounts are offered; verify its identity rather than copying someone else's workspace ID. Save the associations. If the page creates the tunnel before offering association editing, open its details and edit those associations there.
+2. Select the intended Platform organisation by its identity. Do not choose an organisation just because it is first in a list.
+3. Use the page's **Create tunnel** action. Enter a recognisable name, for example **Celia Files — this computer**, and a description such as “Private access to selected local Windows folders.” Creating/editing requires **Tunnels Read + Manage**.
+4. In the tunnel's organisation/workspace associations, include its owning Platform organisation and the ChatGPT workspace you noted above. Select your own workspace when personal accounts are offered; verify its identity rather than copying someone else's workspace ID. Save the associations. If the page creates the tunnel before offering association editing, open its details and edit those associations there.
 5. Copy the `tunnel_...` ID. Setup expects 32 lowercase letters/digits after the prefix. Give each computer its own tunnel to avoid competing clients.
 
 If access or workspace association is unavailable, resolve it with the account/workspace administrator before continuing. [Official OpenAI tunnel guide](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
@@ -97,11 +148,13 @@ If access or workspace association is unavailable, resolve it with the account/w
 
 ## 6. Create the private runtime credential
 
-1. Open [Platform API keys](https://platform.openai.com/settings/organization/api-keys) in the intended organization/project.
+This key proves that the local tunnel client may connect to your tunnel. It is not a request for paid AI answers. Creating it is not purchasing credits or taking out an additional subscription; the unresolved tunnel-pricing/account requirements are explained [above](#costs-keys-and-chatgpt-plus-access). Do not add a payment method or buy credits merely because a key is required.
+
+1. Open [Platform API keys](https://platform.openai.com/settings/organization/api-keys) in the intended organisation/project.
 2. Use **Create new secret key** (or the equivalent key-creation action). Name the key **Celia API**. Select the project/account context intended for this tunnel. A project selection is not an instruction to install software with that project's name.
-3. Choose **Restricted** permissions and enable the tunnel runtime permissions **Read + Use**. Leave unrelated model/resource permissions disabled. The organization must also grant the required tunnel access; a key cannot elevate an account that lacks it. If the page uses a different permission editor, use its equivalent tunnel runtime scope and consult the official guide rather than granting all permissions.
+3. Choose **Restricted** permissions and enable the tunnel runtime permissions **Read + Use**. Leave unrelated model/resource permissions disabled. The organisation must also grant the required tunnel access; a key cannot elevate an account that lacks it. If the page uses a different permission editor, use its equivalent tunnel runtime scope and consult the official guide rather than granting all permissions.
 4. Create the key and privately copy the secret when shown. Preserve it in storage you control before dismissing the dialog, because the complete secret may not be displayed again. The name “Celia API” is a label; the secret is the long value beginning with `sk-`.
-5. Do not use an organization admin key or enable model inference permissions for this file connection. A project label such as n8n does not add an n8n dependency.
+5. Do not use an organisation admin key or enable model inference permissions for this file connection. A project label such as n8n does not add an n8n dependency.
 
 If the required permission is absent, resolve it before connecting. Celia cannot grant itself account access. [Official permissions explanation](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
 
@@ -151,7 +204,7 @@ The secret is held in memory for the application session. OFF stops the tunnel b
 
 ## 9. Add the connection to ChatGPT
 
-Use ChatGPT on the web while Celia is green:
+If your account passed the access check above, use ChatGPT on the web while Celia is green. These steps describe the custom-plugin interface; account/workspace restrictions can limit the available controls or actions:
 
 1. Open [ChatGPT Plugins](https://chatgpt.com/plugins) in the workspace associated with your tunnel.
 2. Select **+**, then **Add custom MCP server**.
@@ -234,4 +287,4 @@ Python can remain installed for other software. There is no Celia Windows servic
 
 ## 16. Share the project
 
-Follow [PUBLISHING.md](PUBLISHING.md). Publish the sanitized source package, choose a license and run the included Windows workflow. Never upload your live installation folder, working vault, API secrets or runtime recovery files. Read [SECURITY.md](SECURITY.md) for the application's actual security boundaries and [VALIDATION.md](VALIDATION.md) for what has and has not been tested.
+Follow [PUBLISHING.md](PUBLISHING.md). Publish the sanitised source package, choose a licence and run the included Windows workflow. Never upload your live installation folder, working vault, API secrets or runtime recovery files. Read [SECURITY.md](SECURITY.md) for the application's actual security boundaries and [VALIDATION.md](VALIDATION.md) for what has and has not been tested.
