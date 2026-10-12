@@ -15,4 +15,10 @@ Verified on 2026-10-13 on the existing Windows x64 computer using Python 3.12.14
 
 The working original installation's ChatGPT connection was previously tested separately. This release verification does not use its credentials, tunnel or data. It does not create a new OpenAI tunnel or test ChatGPT account eligibility for another user.
 
-GitHub Actions is supplied but has not run until this source is uploaded. A separate clean Windows machine/VM and another account have not been tested. Desktop/startup shortcut creation is inherited from the previously tested live installation and was intentionally not executed by the disposable installer, to avoid replacing the working shortcuts.
+## Fresh GitHub Windows runner
+
+The published repository also passed [Windows verification run 38319770042](https://github.com/ezequiel-gb/Celia/actions/runs/38319770042) for source commit `f5902c9e7fce54c64a3cf189d788213a0365fed1`.
+
+The fresh GitHub-hosted windows-latest environment checked out this repository, installed Python 3.12 x64, ran setup with the locked dependencies and official tunnel download, then passed the 9 filesystem policy tests, 4 tray lifecycle tests, real stdio MCP protocol checks and hidden-process shutdown test. No API secret, live account connection or production folders were used.
+
+This validates local installation on a second Windows environment. Another person's live ChatGPT account/connection and an interactive installation on a second physical PC have not been tested. Desktop/startup shortcut creation is inherited from the previously tested live installation and was intentionally not executed by either disposable installer, to avoid writing interactive user shortcuts during automated verification.
