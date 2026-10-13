@@ -19,7 +19,7 @@ The original operator reported a personal ChatGPT Plus subscription and complete
 
 ## Fresh GitHub Windows runner
 
-The published repository also passed [Windows verification run 38319770042](https://github.com/ezequiel-gb/Celia/actions/runs/38319770042) for source commit `f5902c9e7fce54c64a3cf189d788213a0365fed1`.
+The published repository also passed [Windows verification run 38319770042](https://github.com/ezequiel-gb/Celious/actions/runs/38319770042) for source commit `f5902c9e7fce54c64a3cf189d788213a0365fed1`.
 
 The fresh GitHub-hosted windows-latest environment checked out this repository, installed Python 3.12 x64, ran setup with the locked dependencies and official tunnel download, then passed the 9 filesystem policy tests, 4 tray lifecycle tests, real stdio MCP protocol checks and hidden-process shutdown test. No API secret, live account connection or production folders were used.
 

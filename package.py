@@ -8,11 +8,11 @@ BASE = Path(__file__).resolve().parent
 FILES = ['README.md', 'TROUBLESHOOTING.md', 'SECURITY.md', 'PUBLISHING.md', 'VALIDATION.md',
          'INSTALLATION-A-TO-Z.md', 'PROJECT-EXPLAINED.md',
          '.gitignore', '.github/workflows/windows.yml', 'setup.py', 'package.py',
-         'Install.cmd', 'Start-Celia.cmd']
+         'Install.cmd', 'Start-Celious.cmd']
 FILES += ['service/' + name for name in ['engine.py', 'server.py', 'connect.py', 'tray_core.py',
           'tray.py', 'install_tray.py', 'review.py', 'test_service.py', 'test_tray.py',
           'requirements.txt', 'requirements.lock.txt', 'config.example.json']]
-FILES += ['assets/celia-' + state + '.ico' for state in ['on', 'off', 'starting', 'error']]
+FILES += ['assets/celious-' + state + '.ico' for state in ['on', 'off', 'starting', 'error']]
 
 
 def main():
@@ -33,12 +33,12 @@ def main():
                 raise ValueError('Personal Windows profile path in ' + name)
     destination = BASE / 'dist'
     destination.mkdir(exist_ok=True)
-    archive = destination / 'celia-files-source.zip'
+    archive = destination / 'celious-files-source.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as output:
         for name in FILES:
-            output.write(BASE / name, 'celia-files/' + name)
+            output.write(BASE / name, 'celious-files/' + name)
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-    (destination / 'SHA256SUMS.txt').write_text(digest + '  celia-files-source.zip\n', 'ascii')
+    (destination / 'SHA256SUMS.txt').write_text(digest + '  celious-files-source.zip\n', 'ascii')
     print(f'Checked and packaged {len(FILES)} allowlisted source files.')
     print(archive)
     print('SHA256: ' + digest)

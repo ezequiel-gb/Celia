@@ -1,10 +1,12 @@
-# What Celia Files is and how it works
+# What Celious Files is and how it works
 
-Celia Files lets you use ChatGPT to work with files in folders you explicitly select on your Windows computer. You can ask for a document summary, a file search, an edited note, a new folder or a recoverable deletion. The assistant chooses tools, while local software performs permitted operations on disk.
+Celious is our independent Windows implementation, inspired by the original Celia project. References to Celia in original materials and to components such as Celia Core describe that original project, not a claim that those components are installed here.
+
+Celious Files lets you use ChatGPT to work with files in folders you explicitly select on your Windows computer. You can ask for a document summary, a file search, an edited note, a new folder or a recoverable deletion. The assistant chooses tools, while local software performs permitted operations on disk.
 
 ## The problem it solves
 
-A conversation alone does not provide direct access to an arbitrary local project folder. Manually uploading each file becomes cumbersome and can separate the answer from the latest version on disk. Celia Files provides a controlled working surface: the assistant can read the current file and save a requested result back into the selected workspace.
+A conversation alone does not provide direct access to an arbitrary local project folder. Manually uploading each file becomes cumbersome and can separate the answer from the latest version on disk. Celious Files provides a controlled working surface: the assistant can read the current file and save a requested result back into the selected workspace.
 
 A Markdown vault adds durable context. Project notes, decisions and next actions can be saved as normal files, reviewed by a person and read in a later session. This only happens when information is actually saved; the software does not convert every conversation into memory automatically.
 
@@ -13,21 +15,21 @@ A Markdown vault adds durable context. Project notes, decisions and next actions
 | Component | Responsibility | Where it lives |
 | --- | --- | --- |
 | ChatGPT | Understand requests and decide which tools to call | Your OpenAI account |
-| Celia Files plugin | Present the server's tools in a conversation | ChatGPT plugin configuration |
+| Celious Files plugin | Present the server's tools in a conversation | ChatGPT plugin configuration |
 | Secure MCP Tunnel | Transport requests between OpenAI and the local client | OpenAI tunnel plus local client |
 | tunnel-client | Run the private connection and invoke the MCP server | Windows background process |
-| Celia MCP server | Expose the 14 tools and enforce file policy | Local Python process |
-| Celia tray switch | Start, check and stop the local connection | Windows icon and small control panel |
+| Celious MCP server | Expose the 14 tools and enforce file policy | Local Python process |
+| Celious tray switch | Start, check and stop the local connection | Windows icon and small control panel |
 | Projects and Vault | Store the files you authorise | Selected local directories |
 
-MCP means Model Context Protocol, the interface used to describe tools and exchange calls/results. “Celia API” is the runtime credential's name. This package does not create a separate public REST API or a new AI model.
+MCP means Model Context Protocol, the interface used to describe tools and exchange calls/results. “Celious API” is the runtime credential's name. This package does not create a separate public REST API or a new AI model.
 
-ChatGPT supplies the AI responses in your conversation. The local programme handles files; it does not call a paid model API. The Platform key authenticates the tunnel connection. Creating that key is not purchasing API credits. For the distinction between ChatGPT Plus, tunnel access and unresolved tunnel pricing, read [Does Celia Files cost anything?](README.md#does-celia-files-cost-anything) and the guide's [account checks](INSTALLATION-A-TO-Z.md#costs-keys-and-chatgpt-plus-access).
+ChatGPT supplies the AI responses in your conversation. The local programme handles files; it does not call a paid model API. The Platform key authenticates the tunnel connection. Creating that key is not purchasing API credits. For the distinction between ChatGPT Plus, tunnel access and unresolved tunnel pricing, read [Does Celious Files cost anything?](README.md#does-celious-files-cost-anything) and the guide's [account checks](INSTALLATION-A-TO-Z.md#costs-keys-and-chatgpt-plus-access).
 
 ```text
 You request work in ChatGPT
           |
-ChatGPT calls a Celia Files tool
+ChatGPT calls a Celious Files tool
           |
 OpenAI tunnel delivers the request to the local client
           |
@@ -42,7 +44,7 @@ The tunnel uses an outbound connection, allowing this design to keep the file se
 
 ## Example: editing a project note
 
-You ask: “Use Celia Files to read Projects/Example/status.md and change the deadline to Friday.” ChatGPT reads the file through a tool, requests an exact-text edit and receives its result. The server checks that the root exists, is writable and contains the allowed relative path. It saves the previous content before updating the file. You can inspect the result directly in Windows.
+You ask: “Use Celious Files to read Projects/Example/status.md and change the deadline to Friday.” ChatGPT reads the file through a tool, requests an exact-text edit and receives its result. The server checks that the root exists, is writable and contains the allowed relative path. It saves the previous content before updating the file. You can inspect the result directly in Windows.
 
 The tray controls availability. ON starts the local tunnel and server. Hiding the panel leaves them running. OFF ends the connection; Exit also discards the tray's cached secret. Starting the icon at login leaves it OFF until you decide to connect.
 
@@ -60,7 +62,7 @@ The default installation grants direct mutations inside Projects and Vault. It r
 
 These are application checks, not a separate Windows sandbox or independently audited security guarantee. Local software running as the same user may still access process memory or files. ChatGPT's own tool approvals and account restrictions remain separate. Read SECURITY.md before extending access.
 
-## How this relates to the wider Celia project
+## How this relates to the wider Celious project
 
 This source release is the **file-access layer** plus a starter vault and a desktop connection switch. It does not contain Celia Core, Celia Engine, Miles, autonomous agent supervision, email processing, Git promotion workflows or the broader architecture described in reference material. Installing this package does not create those components or reproduce a nine-workspace deployment.
 

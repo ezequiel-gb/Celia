@@ -1,4 +1,4 @@
-"""Background connection lifecycle for the Celia tray application."""
+"""Background connection lifecycle for the Celious tray application."""
 import json
 import os
 from pathlib import Path
@@ -103,7 +103,7 @@ class Connection:
         self.process = None
         self.key = None
         self.state = 'off'
-        self.message = 'Celia is off'
+        self.message = 'Celious is off'
         self.external = []
 
     def detect(self):
@@ -121,18 +121,18 @@ class Connection:
                 self.state = 'error'
                 self.message = 'Connection stopped unexpectedly. Open the connection log.'
             elif self.state not in ('error', 'starting'):
-                self.state, self.message = 'off', 'Celia is off'
+                self.state, self.message = 'off', 'Celious is off'
         return self.state
 
     def start(self, key):
         # Avoid loading the full MCP SDK on a GUI worker thread. Doctor checks the server itself.
-        for required in [CLIENT, PROFILES / 'celia.yaml', BASE / 'server.py']:
+        for required in [CLIENT, PROFILES / 'celious.yaml', BASE / 'server.py']:
             if not required.is_file():
-                raise FileNotFoundError('Celia setup file missing: ' + required.name)
+                raise FileNotFoundError('Celious setup file missing: ' + required.name)
         env = os.environ.copy()
         env['CONTROL_PLANE_API_KEY'] = key
         self.state, self.message = 'starting', 'Checking the connection…'
-        common = ['--profile', 'celia', '--profile-dir', str(PROFILES), '--control-plane.tunnel-id', TUNNEL_ID]
+        common = ['--profile', 'celious', '--profile-dir', str(PROFILES), '--control-plane.tunnel-id', TUNNEL_ID]
         try:
             with (RUNTIME / 'tray-connection.log').open('ab') as log:
                 result = subprocess.run([str(CLIENT), 'doctor', *common, '--explain'], env=env,
@@ -171,4 +171,4 @@ class Connection:
         self.external = []
         if clear_key:
             self.key = None
-        self.state, self.message = 'off', 'Celia is off'
+        self.state, self.message = 'off', 'Celious is off'

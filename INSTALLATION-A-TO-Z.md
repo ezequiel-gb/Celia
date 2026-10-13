@@ -1,8 +1,8 @@
-# Celia Files: installation from A to Z
+# Celious Files: installation from A to Z
 
 This guide takes a new operator from an unconfigured Windows computer to a tested ChatGPT connection. Read [PROJECT-EXPLAINED.md](PROJECT-EXPLAINED.md) first for the purpose, architecture and limits.
 
-All commands below are for **Command Prompt**, unless stated otherwise. Do not paste your API secret into commands, ChatGPT, screenshots, GitHub or these documents. The setup command needs a tunnel ID; the secret belongs only in Celia's masked input window.
+All commands below are for **Command Prompt**, unless stated otherwise. Do not paste your API secret into commands, ChatGPT, screenshots, GitHub or these documents. The setup command needs a tunnel ID; the secret belongs only in Celious's masked input window.
 
 ## Costs, keys and ChatGPT Plus access
 
@@ -10,41 +10,41 @@ All commands below are for **Command Prompt**, unless stated otherwise. Do not p
 
 | Term | What it means for this installation |
 | --- | --- |
-| ChatGPT Plus | Your existing ChatGPT subscription. Conversations using Celia still have the applicable ChatGPT message/model/tool limits. It is not a balance of API credits. |
+| ChatGPT Plus | Your existing ChatGPT subscription. Conversations using Celious still have the applicable ChatGPT message/model/tool limits. It is not a balance of API credits. |
 | OpenAI Platform account | The account settings used to manage the tunnel and its permissions. Signing in here is separate from choosing to activate paid API billing. |
-| API key | A secret access credential, similar in purpose to a password. Celia passes it to the tunnel client to authenticate the connection. Creating a key is not a model request, credit purchase or subscription checkout. |
-| Paid model API usage | Software asking an OpenAI model to generate an answer through an API, outside this ChatGPT conversation route. Celia Files does not make those requests. |
+| API key | A secret access credential, similar in purpose to a password. Celious passes it to the tunnel client to authenticate the connection. Creating a key is not a model request, credit purchase or subscription checkout. |
+| Paid model API usage | Software asking an OpenAI model to generate an answer through an API, outside this ChatGPT conversation route. Celious Files does not make those requests. |
 | Secure MCP Tunnel | The connection carrying file-tool requests between ChatGPT and the local file service. It is not the AI model answering you. |
-| ChatGPT usage limits | The allowances for the ChatGPT features you use. Connecting Celia does not give you unlimited model use or a separate allowance. |
+| ChatGPT usage limits | The allowances for the ChatGPT features you use. Connecting Celious does not give you unlimited model use or a separate allowance. |
 
 OpenAI documents [separate ChatGPT/API billing](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform), [Plus usage limits](https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus) and [app usage limits](https://help.openai.com/en/articles/11487775-connected-apps-in-chatgpt). Do not confuse this file connection with a different application that calls the model API or implements Sign in with ChatGPT plan sharing.
 
 ### What we verified, concluded and could not establish
 
-Checked on **13 October 2026**. This describes the published Celia Files v0.2.0 path, not future integrations or another application using the same account.
+Checked on **13 October 2026**. This describes the published Celious Files v0.2.0 path, not future integrations or another application using the same account.
 
 | Question | Finding and confidence |
 | --- | --- |
-| Does Celia charge for installing or running its software? | **Verified in this project:** there is no software fee, payment screen, credit purchase or subscription mechanism. Your own computer/internet costs remain yours. |
-| Does Celia make paid model API calls? | **Verified by source review:** no model inference endpoint/client is called by the installer, file server or controller. The key is passed to the tunnel client, not to a model API. |
+| Does Celious charge for installing or running its software? | **Verified in this project:** there is no software fee, payment screen, credit purchase or subscription mechanism. Your own computer/internet costs remain yours. |
+| Does Celious make paid model API calls? | **Verified by source review:** no model inference endpoint/client is called by the installer, file server or controller. The key is passed to the tunnel client, not to a model API. |
 | Does creating a key automatically buy AI usage? | **Reasonable conclusion from the credential-only workflow:** creating a credential is not purchasing credits or requesting a model response. Using it with a separately billable service is a different action. Keep its permissions limited to the tunnel. |
 | Are tunnel creation, authentication and operation definitely free? | **Unresolved:** the [tunnel guide](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels) and [pricing page](https://developers.openai.com/api/docs/pricing) do not publish a tunnel-specific tariff or explicitly guarantee zero charges. We cannot conclusively classify tunnel traffic as billable or non-billable from those pages. Missing pricing is not a permanent free-service promise. |
 | Must I buy API credits or add a card? | **No purchase/card step is prescribed here.** The published tunnel prerequisites do not list prepaid credits or a payment method. That does not establish that every account can be provisioned without a billing requirement. If your account asks to activate billing, obtain tunnel-specific clarification before accepting; do not buy credits just to follow this guide. |
-| Which allowance does a Celia conversation use? | **Verified product distinction:** ChatGPT conversations remain subject to ChatGPT's allowances; app/provider limits may also apply. **Code-based conclusion:** Celia generates no API model-token usage to debit API credits. This does not settle the separate tunnel-pricing question above. |
+| Which allowance does a Celious conversation use? | **Verified product distinction:** ChatGPT conversations remain subject to ChatGPT's allowances; app/provider limits may also apply. **Code-based conclusion:** Celious generates no API model-token usage to debit API credits. This does not settle the separate tunnel-pricing question above. |
 
-OpenAI's [MCP API guide](https://developers.openai.com/api/docs/guides/tools-connectors-mcp) describes model-token billing when developers call MCP through the **Responses API**, with no extra per-tool-call fee in that API flow. Those paid model-request examples are not part of Celia's ChatGPT installation and are not a tunnel-wide pricing guarantee. Do not run them as a connection test.
+OpenAI's [MCP API guide](https://developers.openai.com/api/docs/guides/tools-connectors-mcp) describes model-token billing when developers call MCP through the **Responses API**, with no extra per-tool-call fee in that API flow. Those paid model-request examples are not part of Celious's ChatGPT installation and are not a tunnel-wide pricing guarantee. Do not run them as a connection test.
 
 ### Can I use it with my personal Plus account?
 
 The [custom MCP server guide](https://developers.openai.com/api/docs/guides/custom-mcp-server) describes read/write plugins and workspace restrictions but does not provide a Plus-specific entitlement guarantee. The [Help Centre developer-mode guide](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt) currently assigns full MCP write/modify beta access to Business, Enterprise and Edu, and describes Pro read/fetch access. It does not establish full personal Plus support.
 
-The maintainer's personal Plus setup previously completed Celia read/write tests. That is an observation about one account, not a promise that every Plus account has the same access. Confirm that **your** ChatGPT web account offers **Add custom MCP server → Tunnel** and permits the required actions. A visible plugin menu alone is not evidence that editing/deletion is enabled. Finish the disposable read/write test in section 10 before relying on it for real work.
+The maintainer's personal Plus setup previously completed Celious read/write tests. That is an observation about one account, not a promise that every Plus account has the same access. Confirm that **your** ChatGPT web account offers **Add custom MCP server → Tunnel** and permits the required actions. A visible plugin menu alone is not evidence that editing/deletion is enabled. Finish the disposable read/write test in section 10 before relying on it for real work.
 
 If the connection or write actions are unavailable, check the account/workspace permissions or ask OpenAI Support. Paying for API credits does not grant ChatGPT plugin or write permissions. This guide does not recommend purchasing credits or upgrading your ChatGPT plan to resolve unverified eligibility.
 
 ### Check billing and usage without buying anything
 
-1. Sign in to [OpenAI Platform billing](https://platform.openai.com/account/billing/overview). Select the organisation owning your tunnel and review its billing status, payment methods and any existing prepaid/automatic recharge settings. **Viewing this page is a check, not a purchase.** Do not select Add payment method, Buy credits or enable automatic recharge as part of Celia setup.
+1. Sign in to [OpenAI Platform billing](https://platform.openai.com/account/billing/overview). Select the organisation owning your tunnel and review its billing status, payment methods and any existing prepaid/automatic recharge settings. **Viewing this page is a check, not a purchase.** Do not select Add payment method, Buy credits or enable automatic recharge as part of Celious setup.
 2. Open the [Usage Dashboard](https://platform.openai.com/usage). Choose that organisation, the relevant date range and project filters; review activity and spend before/after a disposable connection test. Other applications in the same organisation may contribute usage. A zero model-token total does not prove that every possible charge is zero.
 3. If those pages are unavailable, ask the organisation owner for a review. Dashboard visibility is a separate permission. See [OpenAI's usage explanation](https://help.openai.com/en/articles/10478918-reviewing-api-usage-and-costs).
 4. To review your existing ChatGPT subscription, open **ChatGPT → Settings → Billing**; it is a separate account view. See [OpenAI's billing instructions](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform).
@@ -57,16 +57,16 @@ If you see an explicit charge or billing activation requirement that you did not
 
 ## Before you begin: the whole path
 
-Read the explanation → check Windows and account eligibility → download the source → install Python → choose folders → create a tunnel → create a private runtime key → run Install.cmd → turn the tray ON and enter the key → add Celia Files in ChatGPT → test file operations and OFF/ON.
+Read the explanation → check Windows and account eligibility → download the source → install Python → choose folders → create a tunnel → create a private runtime key → run Install.cmd → turn the tray ON and enter the key → add Celious Files in ChatGPT → test file operations and OFF/ON.
 
 | Term | What it means here |
 | --- | --- |
 | Platform organisation | The OpenAI account context that owns the tunnel and grants tunnel permissions |
-| ChatGPT workspace | The personal or organisational ChatGPT context where you install the Celia Files plugin |
+| ChatGPT workspace | The personal or organisational ChatGPT context where you install the Celious Files plugin |
 | Tunnel ID | Identifier beginning with `tunnel_`; setup uses it to select your connection |
 | API secret | Private credential beginning with `sk-`; enter it only in the masked connection dialog |
 | Root alias | Short name such as Vault that refers to a selected local folder |
-| MCP plugin | The installed ChatGPT connection exposing Celia's tools |
+| MCP plugin | The installed ChatGPT connection exposing Celious's tools |
 
 You provide three installation-specific inputs: your own tunnel ID, your private runtime key and the folders you want to authorise. The repository deliberately contains no working account credential. If your account cannot use tunnels/custom MCP connections, local installation alone cannot complete the connection.
 
@@ -81,8 +81,8 @@ OpenAI account access is separate from Windows installation. You must be able to
 1. Use a Windows **x64** computer and a normal Windows user account that can write to the chosen installation and data folders. ARM64 and 32-bit installations are not validated by this release.
 2. Use an ordinary local folder you own. Avoid Program Files, network shares, cloud placeholders, symbolic links and junctions.
 3. Make sure internet access allows Python package downloads, GitHub release downloads and the OpenAI connection. On a managed computer, have IT review the requirements rather than changing company restrictions.
-4. On this GitHub repository's main page, choose the green **Code** button, then **Download ZIP**. You do not need to create a GitHub account to download a public repository. Alternatively, use a separately supplied `celia-files-source.zip`.
-5. In File Explorer, open Downloads, right-click the downloaded ZIP and choose **Extract All**. Extract into a permanent user-writable local folder. Open the extracted top-level folder, usually named `Celia-main` for this repository's GitHub download or `celia-files` for the source package. You should see `Install.cmd`, `Start-Celia.cmd`, `setup.py`, `service` and `assets` together. That is the installation folder. Do not run files inside the unopened ZIP.
+4. On this GitHub repository's main page, choose the green **Code** button, then **Download ZIP**. You do not need to create a GitHub account to download a public repository. Alternatively, use a separately supplied `celious-files-source.zip`.
+5. In File Explorer, open Downloads, right-click the downloaded ZIP and choose **Extract All**. Extract into a permanent user-writable local folder. Open the extracted top-level folder, usually named `Celious-main` for this repository's GitHub download or `celious-files` for the source package. You should see `Install.cmd`, `Start-Celious.cmd`, `setup.py`, `service` and `assets` together. That is the installation folder. Do not run files inside the unopened ZIP.
 6. Keep this folder in its final location. The generated profile and shortcuts use absolute paths. Moving it later requires reinstallation/reconfiguration.
 
 Git, Codex and n8n are not required to install or run this package. A browser and your own ChatGPT account are required for the ChatGPT connection.
@@ -100,7 +100,7 @@ For the traditional Python 3.12 installer:
 3. Keep **pip**, **Tcl/Tk and IDLE**, and the **Python launcher** selected. Continue with installation for your user where available. The installer may request approval for its launcher options; follow your computer's normal installation policy.
 4. Finish installation, close any old Command Prompt windows and open a new one.
 
-The [official Python Windows installation guide](https://docs.python.org/3.12/using/windows.html) explains these components. Celia's double-click installer currently expects `py -3.12` to work. If you use the newer Python install manager, first install the 3.12 runtime through that manager's documented workflow and run the checks below; installing the manager alone is insufficient.
+The [official Python Windows installation guide](https://docs.python.org/3.12/using/windows.html) explains these components. Celious's double-click installer currently expects `py -3.12` to work. If you use the newer Python install manager, first install the 3.12 runtime through that manager's documented workflow and run the checks below; installing the manager alone is insufficient.
 
 Open Start, type **Command Prompt**, and open it. Run:
 
@@ -111,7 +111,7 @@ py -3.12 -c "import struct, tkinter, venv; print('Python bits:', struct.calcsize
 
 Expect Python `3.12.x`, `Python bits: 64`, and `Required modules available`. If `py` is missing, repair/install the launcher and reopen Command Prompt. If tkinter is missing, add Tcl/Tk through the Python installer. A Microsoft Store shortcut that merely offers to install Python is not a working interpreter.
 
-If you have a real Python 3.12 executable but no launcher, substitute its quoted full path for `py -3.12` in setup commands. The installed Celia shortcut will use its private virtual environment directly.
+If you have a real Python 3.12 executable but no launcher, substitute its quoted full path for `py -3.12` in setup commands. The installed Celious shortcut will use its private virtual environment directly.
 
 **Checkpoint:** both verification commands succeed before proceeding.
 
@@ -121,8 +121,8 @@ This release uses two named roots:
 
 | Alias used by ChatGPT | Purpose | Default location |
 | --- | --- | --- |
-| Projects | Files you choose to work on | `celia-files/data/Projects` |
-| Vault | Markdown notes and durable project context | `celia-files/data/Vault` |
+| Projects | Files you choose to work on | `celious-files/data/Projects` |
+| Vault | Markdown notes and durable project context | `celious-files/data/Vault` |
 
 Both receive direct read, write, create, edit, move and recoverable delete permissions. Windows file permissions and application path checks still apply. A request in ChatGPT may also require approval under ChatGPT's own controls; a local setting does not override those controls.
 
@@ -132,13 +132,13 @@ For a first installation, use the empty defaults and add a few disposable sample
 
 ## 5. Create the OpenAI tunnel
 
-First sign in to [ChatGPT](https://chatgpt.com/) and note whether you are using your personal workspace or an organisation workspace. Then sign in to [OpenAI Platform](https://platform.openai.com/) using the intended account. If you do not have an account, complete OpenAI's own signup first. There is no account registration or purchase inside Celia's installer.
+First sign in to [ChatGPT](https://chatgpt.com/) and note whether you are using your personal workspace or an organisation workspace. Then sign in to [OpenAI Platform](https://platform.openai.com/) using the intended account. If you do not have an account, complete OpenAI's own signup first. There is no account registration or purchase inside Celious's installer.
 
 Before continuing, complete the [Plus access and billing checks above](#costs-keys-and-chatgpt-plus-access). Platform must offer the necessary tunnel permissions, and ChatGPT must permit the connection/actions you need. This is an access check, not a recommendation to buy API credits. Names and availability may change; the official guides linked below govern account setup.
 
 1. Sign in to [Platform tunnel settings](https://platform.openai.com/settings/organization/tunnels).
 2. Select the intended Platform organisation by its identity. Do not choose an organisation just because it is first in a list.
-3. Use the page's **Create tunnel** action. Enter a recognisable name, for example **Celia Files — this computer**, and a description such as “Private access to selected local Windows folders.” Creating/editing requires **Tunnels Read + Manage**.
+3. Use the page's **Create tunnel** action. Enter a recognisable name, for example **Celious Files — this computer**, and a description such as “Private access to selected local Windows folders.” Creating/editing requires **Tunnels Read + Manage**.
 4. In the tunnel's organisation/workspace associations, include its owning Platform organisation and the ChatGPT workspace you noted above. Select your own workspace when personal accounts are offered; verify its identity rather than copying someone else's workspace ID. Save the associations. If the page creates the tunnel before offering association editing, open its details and edit those associations there.
 5. Copy the `tunnel_...` ID. Setup expects 32 lowercase letters/digits after the prefix. Give each computer its own tunnel to avoid competing clients.
 
@@ -151,12 +151,12 @@ If access or workspace association is unavailable, resolve it with the account/w
 This key proves that the local tunnel client may connect to your tunnel. It is not a request for paid AI answers. Creating it is not purchasing credits or taking out an additional subscription; the unresolved tunnel-pricing/account requirements are explained [above](#costs-keys-and-chatgpt-plus-access). Do not add a payment method or buy credits merely because a key is required.
 
 1. Open [Platform API keys](https://platform.openai.com/settings/organization/api-keys) in the intended organisation/project.
-2. Use **Create new secret key** (or the equivalent key-creation action). Name the key **Celia API**. Select the project/account context intended for this tunnel. A project selection is not an instruction to install software with that project's name.
+2. Use **Create new secret key** (or the equivalent key-creation action). Name the key **Celious API**. Select the project/account context intended for this tunnel. A project selection is not an instruction to install software with that project's name.
 3. Choose **Restricted** permissions and enable the tunnel runtime permissions **Read + Use**. Leave unrelated model/resource permissions disabled. The organisation must also grant the required tunnel access; a key cannot elevate an account that lacks it. If the page uses a different permission editor, use its equivalent tunnel runtime scope and consult the official guide rather than granting all permissions.
-4. Create the key and privately copy the secret when shown. Preserve it in storage you control before dismissing the dialog, because the complete secret may not be displayed again. The name “Celia API” is a label; the secret is the long value beginning with `sk-`.
+4. Create the key and privately copy the secret when shown. Preserve it in storage you control before dismissing the dialog, because the complete secret may not be displayed again. The name “Celious API” is a label; the secret is the long value beginning with `sk-`.
 5. Do not use an organisation admin key or enable model inference permissions for this file connection. A project label such as n8n does not add an n8n dependency.
 
-If the required permission is absent, resolve it before connecting. Celia cannot grant itself account access. [Official permissions explanation](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
+If the required permission is absent, resolve it before connecting. Celious cannot grant itself account access. [Official permissions explanation](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
 
 **Checkpoint:** a suitable runtime secret is available privately. It has not been added to source files or shared in a conversation.
 
@@ -166,16 +166,16 @@ If the required permission is absent, resolve it before connecting. Celia cannot
 
 Double-click **Install.cmd** inside the extracted folder. At `Your tunnel ID (not an API secret):`, paste your tunnel ID and press Enter. Do not enter the secret key here.
 
-The installer creates an isolated environment under `service/.venv`, installs the tested dependency versions, downloads the official tunnel client, verifies its archive checksum, prepares the profile and folder configuration, creates vault starter files, checks the local launcher and creates the **Celia Switch** shortcuts. It does not connect to a live account or ask for the API key.
+The installer creates an isolated environment under `service/.venv`, installs the tested dependency versions, downloads the official tunnel client, verifies its archive checksum, prepares the profile and folder configuration, creates vault starter files, checks the local launcher and creates the **Celious Switch** shortcuts. It does not connect to a live account or ask for the API key.
 
 Wait for **Local installation ready**. The installation window can then close.
 
 ### Option B: specify your own folders and optional login icon
 
-Open the extracted `celia-files` folder in File Explorer. Click its address bar, type `cmd`, and press Enter. Command Prompt opens in that folder. Run:
+Open the extracted `celious-files` folder in File Explorer. Click its address bar, type `cmd`, and press Enter. Command Prompt opens in that folder. Run:
 
 ```bat
-py -3.12 setup.py --projects "C:\CeliaData\Projects" --vault "C:\CeliaData\Vault" --shortcuts --startup
+py -3.12 setup.py --projects "C:\CeliousData\Projects" --vault "C:\CeliousData\Vault" --shortcuts --startup
 ```
 
 Replace the example paths with user-writable folders on the installation's drive. Setup creates missing folders; it preserves existing vault starter files. Enter your tunnel ID when asked. Omit `--startup` if you do not want an icon at Windows login. Login startup starts the icon **OFF**, not an authenticated connection.
@@ -186,15 +186,15 @@ You can instead supply `--tunnel-id YOUR_ACTUAL_TUNNEL_ID` on the command line. 
 
 Read the first error, resolve it using [TROUBLESHOOTING.md](TROUBLESHOOTING.md), and retry. Python dependencies and the tunnel download need internet access. Do not bypass a checksum mismatch or solve unrelated errors by changing PowerShell execution policy.
 
-If setup says **Already configured**, inspect `service/config.json`. To intentionally rerun setup, turn OFF and exit any Celia tray, then add `--replace-config`, preserving all desired folder arguments. Omitting custom folder arguments during reconfiguration selects the defaults again. Never add a key to config.json.
+If setup says **Already configured**, inspect `service/config.json`. To intentionally rerun setup, turn OFF and exit any Celious tray, then add `--replace-config`, preserving all desired folder arguments. Omitting custom folder arguments during reconfiguration selects the defaults again. Never add a key to config.json.
 
 **Checkpoint:** Local installation ready was printed and the shortcut exists. No live connection has started yet.
 
 ## 8. Start the tray and connect
 
-1. Open **Celia Switch** on the Desktop, or double-click **Start-Celia.cmd** in the installation folder.
-2. The small Celia panel and tray icon should appear. If the icon is hidden, check the arrow near the clock.
-3. Click the switch. In the masked **Celia API key** dialog, paste the actual secret with **Ctrl+V** and confirm. Nothing visible in the field does not imply a failed paste: characters are hidden.
+1. Open **Celious Switch** on the Desktop, or double-click **Start-Celious.cmd** in the installation folder.
+2. The small Celious panel and tray icon should appear. If the icon is hidden, check the arrow near the clock.
+3. Click the switch. In the masked **Celious API key** dialog, paste the actual secret with **Ctrl+V** and confirm. Nothing visible in the field does not imply a failed paste: characters are hidden.
 4. Wait for green **Connected** and **Connected in the background**. Amber means it is starting; red means attention is needed. Use **Connection log** to inspect failures locally.
 5. Choose **Hide** or close the panel. This hides the panel while the tray remains running. Choose **Exit** from the tray menu to stop everything.
 
@@ -204,29 +204,29 @@ The secret is held in memory for the application session. OFF stops the tunnel b
 
 ## 9. Add the connection to ChatGPT
 
-If your account passed the access check above, use ChatGPT on the web while Celia is green. These steps describe the custom-plugin interface; account/workspace restrictions can limit the available controls or actions:
+If your account passed the access check above, use ChatGPT on the web while Celious is green. These steps describe the custom-plugin interface; account/workspace restrictions can limit the available controls or actions:
 
 1. Open [ChatGPT Plugins](https://chatgpt.com/plugins) in the workspace associated with your tunnel.
 2. Select **+**, then **Add custom MCP server**.
-3. Name it **Celia Files** and choose **Tunnel** under Connection. Select your tunnel or enter its ID.
+3. Name it **Celious Files** and choose **Tunnel** under Connection. Select your tunnel or enter its ID.
 4. This bundled stdio server has no separate OAuth server; choose **No authentication** for the server interface where offered. The tunnel itself still uses the private runtime credential and OpenAI account permissions. Do not paste that runtime credential into an OAuth field.
 5. Review the permissions and risk notice, then create and install the plugin.
-6. In a conversation, type **@** and select your installed **Celia Files** plugin.
+6. In a conversation, type **@** and select your installed **Celious Files** plugin.
 
 Workspace restrictions may prevent these steps. Follow the current [official custom MCP instructions](https://developers.openai.com/api/docs/guides/custom-mcp-server) if labels change.
 
-**Checkpoint:** Celia Files is installed, selectable in a conversation and can discover its tools.
+**Checkpoint:** Celious Files is installed, selectable in a conversation and can discover its tools.
 
 ## 10. Perform a disposable end-to-end test
 
-Send these requests one at a time in a conversation with Celia Files selected. Wait for a successful tool result at each stage.
+Send these requests one at a time in a conversation with Celious Files selected. Wait for a successful tool result at each stage.
 
-1. “Use Celia Files to call list_roots and read Vault/INDEX.md. Tell me the configured root aliases.” Confirm the roots match your selections.
-2. “Create Vault/Inbox/celia-install-check.txt containing `hello`.” Verify it appears in File Explorer.
-3. “Read that file using Celia Files.” Expect `hello` from a fresh tool call.
+1. “Use Celious Files to call list_roots and read Vault/INDEX.md. Tell me the configured root aliases.” Confirm the roots match your selections.
+2. “Create Vault/Inbox/celious-install-check.txt containing `hello`.” Verify it appears in File Explorer.
+3. “Read that file using Celious Files.” Expect `hello` from a fresh tool call.
 4. “Edit that file, replacing `hello` with `ready`.” Open it locally and confirm `ready`.
-5. “Move it to Vault/Inbox/celia-install-check-renamed.txt.” Confirm the new name and absence of the old name.
-6. “Delete only that renamed test file using Celia Files and return its deletion_id.” Save the returned ID. Confirm the file disappears from its original folder.
+5. “Move it to Vault/Inbox/celious-install-check-renamed.txt.” Confirm the new name and absence of the old name.
+6. “Delete only that renamed test file using Celious Files and return its deletion_id.” Save the returned ID. Confirm the file disappears from its original folder.
 7. “Restore that test file using restore_deleted and the deletion_id you returned.” Confirm it reappears. The original location must be unused and its parent must exist.
 8. “Delete only the test file again.” Keep the deletion record if you want to retain the test's recovery option.
 9. Switch OFF. Ask for a fresh read of Vault/INDEX.md and confirm that the local connection is unavailable. A repeated answer from conversation context is not a successful test.
@@ -244,7 +244,7 @@ Fill this table after testing. This is the evidence needed to call your installa
 | Local installer | Completed successfully |
 | Roots | Actual Projects/Vault folders reviewed |
 | Connection | Green in the tray |
-| ChatGPT discovery | Celia Files selectable and tools available |
+| ChatGPT discovery | Celious Files selectable and tools available |
 | File operations | Create, read, edit, move, delete and restore passed |
 | OFF/ON | Fresh calls fail OFF and work ON |
 | Panel close | Connection remains available while panel is hidden |
@@ -253,9 +253,9 @@ Fill this table after testing. This is the evidence needed to call your installa
 
 Keep results private if they include personal paths or account details. For maintainers, the automated verification commands are in README.md. Run those only with disposable configured folders. GitHub checks cannot establish another person's ChatGPT access.
 
-## 12. Use Celia every day
+## 12. Use Celious every day
 
-Open the switch, turn ON, enter the key if requested, and select Celia Files in ChatGPT. Begin work by asking it to read the relevant project notes. For durable continuity, explicitly ask it to save decisions and next actions in Vault Markdown and link them from INDEX.md. Files stored on disk provide continuity; Celia does not automatically remember unsaved conversations.
+Open the switch, turn ON, enter the key if requested, and select Celious Files in ChatGPT. Begin work by asking it to read the relevant project notes. For durable continuity, explicitly ask it to save decisions and next actions in Vault Markdown and link them from INDEX.md. Files stored on disk provide continuity; Celious does not automatically remember unsaved conversations.
 
 When finished, turn OFF. You can leave the tray available or Exit to discard its cached key. The computer must remain powered, awake and online while you use the connection. Closing the browser does not automatically stop the local tray. An idle green connection remains available but does not autonomously read every file.
 
@@ -271,7 +271,7 @@ Neither backup nor trash is an independent backup of your disk. Preserve it when
 
 For a folder/tunnel change, turn OFF, Exit and rerun setup with **all** desired options plus `--replace-config`. Verify the new roots and repeat the disposable test. Old data is not automatically moved. Keep recovery records and the original folders until no longer needed.
 
-For a leaked/replaced key, revoke the old secret in Platform, create a replacement, Exit Celia, reopen it and enter the replacement privately. Editing or deleting a chat message does not revoke a credential.
+For a leaked/replaced key, revoke the old secret in Platform, create a replacement, Exit Celious, reopen it and enter the replacement privately. Editing or deleting a chat message does not revoke a credential.
 
 For another computer, transfer the **source ZIP**, install its own Python environment and create a separate tunnel/runtime credential. Transfer selected project/vault files separately if you want their contents there. Do not copy `.venv`, `config.json`, generated profiles or shortcuts and expect them to work unchanged. Turn off the old connection before retiring the old computer.
 
@@ -279,12 +279,20 @@ For another computer, transfer the **source ZIP**, install its own Python enviro
 
 1. Turn OFF and **Exit** the tray.
 2. Preserve your Projects, Vault and any needed recovery history. The default data folders live inside the installation, so deleting that installation would also delete those files.
-3. Remove the **Celia Switch** Desktop shortcut. If startup was enabled, press Win+R, enter `shell:startup`, and remove only the Celia Switch shortcut.
-4. Remove or disconnect the Celia Files plugin in ChatGPT. Revoke a dedicated key and remove the dedicated tunnel in Platform when you no longer need them.
+3. Remove the **Celious Switch** Desktop shortcut. If startup was enabled, press Win+R, enter `shell:startup`, and remove only the Celious Switch shortcut.
+4. Remove or disconnect the Celious Files plugin in ChatGPT. Revoke a dedicated key and remove the dedicated tunnel in Platform when you no longer need them.
 5. Once your data is preserved, remove the local installation folder using File Explorer. Other separately configured folders stay wherever you placed them.
 
-Python can remain installed for other software. There is no Celia Windows service, paid model integration or n8n workflow to remove.
+Python can remain installed for other software. There is no Celious Windows service, paid model integration or n8n workflow to remove.
 
 ## 16. Share the project
 
 Follow [PUBLISHING.md](PUBLISHING.md). Publish the sanitised source package, choose a licence and run the included Windows workflow. Never upload your live installation folder, working vault, API secrets or runtime recovery files. Read [SECURITY.md](SECURITY.md) for the application's actual security boundaries and [VALIDATION.md](VALIDATION.md) for what has and has not been tested.
+
+## 17. If you already installed our earlier Celia Files version
+
+Our implementation was renamed **Celious Files** to distinguish it from the original **Celia** project that inspired it. The new desktop controller is **Celious Switch**, the launcher is **Start-Celious.cmd**, the tunnel profile is **celious**, and the repository is [ezequiel-gb/Celious](https://github.com/ezequiel-gb/Celious). Original Celia reference documents retain their original names.
+
+Before migrating an existing installation, back up its configuration, vault, recovery storage and shortcuts. Turn OFF and Exit the old tray. Install the new source into a separate permanent folder using the same installation procedure and deliberate folder selections; recreate its Python environment rather than copying or simply moving the old one. Preserve your working files and recovery history before retiring the old installation. Generated profile and shortcut paths must point to the new location.
+
+Renaming a project or a display label does not invalidate its existing tunnel ID or secret key. You can keep the same connection and privately re-enter its existing key after restart. Rename the existing ChatGPT app/Platform display labels if desired; do not change credentials, permissions or associations merely to change the name. If you keep both versions during migration, run only one client for the same tunnel at a time.

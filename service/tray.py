@@ -1,4 +1,4 @@
-"""Native Windows tray icon with a small Celia control panel."""
+"""Native Windows tray icon with a small Celious control panel."""
 import argparse
 import json
 import os
@@ -34,14 +34,14 @@ class TrayIcon:
     def run(self):
         wc = win32gui.WNDCLASS()
         wc.hInstance = win32api.GetModuleHandle(None)
-        wc.lpszClassName = 'CeliaTrayIconWindow'
+        wc.lpszClassName = 'CeliousTrayIconWindow'
         restart = win32gui.RegisterWindowMessage('TaskbarCreated')
         wc.lpfnWndProc = {self.CALLBACK: self.click, win32con.WM_COMMAND: self.command,
                          win32con.WM_DESTROY: self.destroy, win32con.WM_USER + 21: self.modify,
                          restart: lambda *args: self.modify(*args, add=True)}
         win32gui.RegisterClass(wc)
-        self.hwnd = win32gui.CreateWindow(wc.lpszClassName, 'Celia Tray', 0, 0, 0, 0, 0, 0, 0, wc.hInstance, None)
-        self.icons = {state: win32gui.LoadImage(0, str(ASSETS / ('celia-' + state + '.ico')), win32con.IMAGE_ICON, 32, 32, win32con.LR_LOADFROMFILE)
+        self.hwnd = win32gui.CreateWindow(wc.lpszClassName, 'Celious Tray', 0, 0, 0, 0, 0, 0, 0, wc.hInstance, None)
+        self.icons = {state: win32gui.LoadImage(0, str(ASSETS / ('celious-' + state + '.ico')), win32con.IMAGE_ICON, 32, 32, win32con.LR_LOADFROMFILE)
                       for state in ['off', 'on', 'starting', 'error']}
         self.modify(add=True)
         self.ready.set()
@@ -50,7 +50,7 @@ class TrayIcon:
     def modify(self, *args, add=False):
         state = 'on' if self.state == 'external' else self.state
         data = (self.hwnd, 1, win32gui.NIF_ICON | win32gui.NIF_MESSAGE | win32gui.NIF_TIP,
-                self.CALLBACK, self.icons[state], 'Celia • ' + self.state.title())
+                self.CALLBACK, self.icons[state], 'Celious • ' + self.state.title())
         win32gui.Shell_NotifyIcon(win32gui.NIM_ADD if add else win32gui.NIM_MODIFY, data)
         return 0
 
@@ -63,8 +63,8 @@ class TrayIcon:
             self.events.put('show')
         elif lp == win32con.WM_RBUTTONUP:
             menu = win32gui.CreatePopupMenu()
-            for ident, label in [(1, 'Open Celia switch'), (2, 'Turn off' if self.state in ('on', 'external') else 'Turn on'),
-                                  (3, 'Open ChatGPT'), (4, 'Exit Celia')]:
+            for ident, label in [(1, 'Open Celious switch'), (2, 'Turn off' if self.state in ('on', 'external') else 'Turn on'),
+                                  (3, 'Open ChatGPT'), (4, 'Exit Celious')]:
                 win32gui.AppendMenu(menu, win32con.MF_STRING, ident, label)
             win32gui.SetForegroundWindow(hwnd)
             win32gui.TrackPopupMenu(menu, win32con.TPM_LEFTALIGN, *win32gui.GetCursorPos(), 0, hwnd, None)
@@ -97,17 +97,17 @@ class App:
             (RUNTIME / 'tray-error.log').write_text(''.join(traceback.format_exception(kind, value, trace)), 'utf-8')
         self.root.report_callback_exception = report_error
         self.root.withdraw()
-        self.root.title('Celia')
+        self.root.title('Celious')
         self.root.geometry('420x340')
         self.root.resizable(False, False)
         self.root.configure(bg='#111827')
-        self.root.iconbitmap(str(ASSETS / 'celia-on.ico'))
+        self.root.iconbitmap(str(ASSETS / 'celious-on.ico'))
         self.root.protocol('WM_DELETE_WINDOW', self.root.withdraw)
         self.events = queue.Queue()
         self.connection = Connection()
         self.busy = False
         self.tray = TrayIcon(self.events)
-        tk.Label(self.root, text='CELIA', bg='#111827', fg='#f9fafb', font=('Segoe UI', 24, 'bold')).pack(pady=(22, 0))
+        tk.Label(self.root, text='CELIOUS', bg='#111827', fg='#f9fafb', font=('Segoe UI', 24, 'bold')).pack(pady=(22, 0))
         tk.Label(self.root, text='Your files. Connected when you choose.', bg='#111827', fg='#9ca3af', font=('Segoe UI', 10)).pack(pady=(2, 18))
         self.status = tk.Label(self.root, bg='#111827', fg='#9ca3af', font=('Segoe UI', 12, 'bold'))
         self.status.pack()
@@ -137,7 +137,7 @@ class App:
         if log.exists():
             os.startfile(log)
         else:
-            messagebox.showinfo('Celia', 'No connection log yet.', parent=self.root)
+            messagebox.showinfo('Celious', 'No connection log yet.', parent=self.root)
 
     def render(self):
         state = self.connection.state
@@ -185,7 +185,7 @@ class App:
             self.busy = True  # Keep periodic detection out of the dialog's nested event loop.
             self.show()
             try:
-                value = simpledialog.askstring('Celia API key', 'Paste your secret key beginning with sk-.\nIt stays in memory until you exit Celia.', show='*', parent=self.root)
+                value = simpledialog.askstring('Celious API key', 'Paste your secret key beginning with sk-.\nIt stays in memory until you exit Celious.', show='*', parent=self.root)
             finally:
                 self.busy = False
             if value is None:
@@ -193,7 +193,7 @@ class App:
             key = normalize_key(value)
             value = None
             if key is None:
-                messagebox.showerror('Celia', 'Paste the secret value beginning with sk-, not the key name.', parent=self.root)
+                messagebox.showerror('Celious', 'Paste the secret value beginning with sk-, not the key name.', parent=self.root)
                 return
         self.connection.state, self.connection.message = 'starting', 'Checking the connection…'
         self.render()
@@ -231,7 +231,7 @@ class App:
 
     def exit(self):
         if self.busy:
-            messagebox.showinfo('Celia', 'Wait for the current connection operation to finish, then exit.', parent=self.root)
+            messagebox.showinfo('Celious', 'Wait for the current connection operation to finish, then exit.', parent=self.root)
             return
         self.connection.stop(clear_key=True)
         self.tray.close()
@@ -270,10 +270,10 @@ def main():
             marker.unlink(missing_ok=True)
         print('Hidden parent/child startup and complete Job Object shutdown passed.')
         return
-    mutex = win32event.CreateMutex(None, False, 'Local\\CeliaFilesTray')
+    mutex = win32event.CreateMutex(None, False, 'Local\\CeliousFilesTray')
     if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
         # A second shortcut launch opens the existing panel.
-        hwnd = win32gui.FindWindow('CeliaTrayIconWindow', 'Celia Tray')
+        hwnd = win32gui.FindWindow('CeliousTrayIconWindow', 'Celious Tray')
         if hwnd:
             win32gui.PostMessage(hwnd, TrayIcon.CALLBACK, 1, win32con.WM_LBUTTONUP)
         return
@@ -292,4 +292,4 @@ if __name__ == '__main__':
             raise
         import traceback
         (RUNTIME / 'tray-error.log').write_text(traceback.format_exc(), 'utf-8')
-        win32gui.MessageBox(0, 'Celia tray could not start. See service/.runtime/tray-error.log.', 'Celia', win32con.MB_ICONERROR)
+        win32gui.MessageBox(0, 'Celious tray could not start. See service/.runtime/tray-error.log.', 'Celious', win32con.MB_ICONERROR)

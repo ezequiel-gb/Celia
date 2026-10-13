@@ -2,23 +2,23 @@
 
 | Symptom | Resolution in this package |
 | --- | --- |
-| PowerShell says running scripts is disabled | Use Install.cmd and Start-Celia.cmd. They launch Python directly; changing global execution policy is unnecessary. |
-| “No valid key entered” or paste appears to do nothing | Use the masked graphical input, Ctrl+V, and the actual secret beginning with sk-. “Celia API” is its label. The field intentionally hides input. |
+| PowerShell says running scripts is disabled | Use Install.cmd and Start-Celious.cmd. They launch Python directly; changing global execution policy is unnecessary. |
+| “No valid key entered” or paste appears to do nothing | Use the masked graphical input, Ctrl+V, and the actual secret beginning with sk-. “Celious API” is its label. The field intentionally hides input. |
 | I have Plus; why am I asked for an API key? | It authenticates the private tunnel, rather than paying for an AI model. Creating it is not buying credits. Read the guide's [costs and account explanation](INSTALLATION-A-TO-Z.md#costs-keys-and-chatgpt-plus-access) before creating it. |
-| Platform offers Buy credits or asks for payment details | Do not assume this is a Celia requirement. Credit purchases and automatic recharge are not setup steps here. Review the linked billing explanation; if your account requires activation, ask OpenAI for tunnel-specific clarification before accepting it. |
+| Platform offers Buy credits or asks for payment details | Do not assume this is a Celious requirement. Credit purchases and automatic recharge are not setup steps here. Review the linked billing explanation; if your account requires activation, ask OpenAI for tunnel-specific clarification before accepting it. |
 | I have Plus but cannot add the custom connection or use write actions | Check actual account/workspace access. Full personal Plus read/write entitlement is not established by the current official guidance. Purchasing API credits does not grant these permissions. Follow the guide's access check or ask OpenAI Support. |
-| I reach a ChatGPT usage limit | Celia conversations still use the applicable ChatGPT allowances; the connection does not create an unlimited allowance. This application does not switch to paid API model calls when a ChatGPT limit is reached. |
+| I reach a ChatGPT usage limit | Celious conversations still use the applicable ChatGPT allowances; the connection does not create an unlimited allowance. This application does not switch to paid API model calls when a ChatGPT limit is reached. |
 | “n8n” appears as a service/project | A Platform project label does not install or require n8n. This program has no n8n dependency. Verify the selected organisation and tunnel permissions. |
 | Server executable not found when the folder contains spaces | Setup creates a quoted command with forward-slash paths. Regenerate the profile through setup instead of manually inserting unescaped backslashes. |
 | Tray stays Starting | The controller keeps full MCP imports out of the GUI worker thread, initialises COM on WMI threads and prevents concurrent monitoring while the key dialog is open. Inspect service/.runtime/tray-connection.log if the current version still fails. |
 | Tunnel absent from ChatGPT | Confirm the tunnel belongs to the intended Platform organisation, is associated with the target ChatGPT workspace and the operator has Tunnels Read + Use. Workspace plugin permissions are separate. |
 | Discovery fails | Keep the tray green during discovery. Check the local diagnostic log, authorised roots and installed Python dependencies. Run service/.venv/Scripts/python.exe service/connect.py --check for local checks without a key. |
 | Connected terminal closes and tools stop responding | A foreground terminal owns its process. Use the tray shortcut for a hidden managed process. Closing the panel leaves the tray running; Exit stops the connection. |
-| Icon is not next to the clock | Look in the Windows hidden-icons arrow and drag the Celia icon onto the visible tray area. |
+| Icon is not next to the clock | Look in the Windows hidden-icons arrow and drag the Celious icon onto the visible tray area. |
 | Access denied for a path | Use a configured root alias and a relative path. Check writable/read-only flags and whether the path is hidden, linked or outside the root. Cloud placeholders and junctions are not ordinary local folders. |
 | Delete fails on another drive | Recovery storage is under service/.runtime. Recoverable rename requires the target and recovery storage to share a volume; use same-volume roots or keep those files undeleted. |
 | Old terminal and tray are both running | After successful diagnostics, the tray stops matching clients for this installed executable and tunnel before starting its managed connection. Do not share one tunnel across simultaneous installations. |
-| Key was pasted into chat, a screenshot or a repository | Revoke it in Platform, create a replacement with minimal tunnel permissions, exit Celia to forget the old key, then enter the replacement privately. Removing text alone does not revoke a key. |
+| Key was pasted into chat, a screenshot or a repository | Revoke it in Platform, create a replacement with minimal tunnel permissions, exit Celious to forget the old key, then enter the replacement privately. Removing text alone does not revoke a key. |
 
 Review logs locally before sharing: paths and account metadata may appear even when file contents and secrets are omitted. Never upload .runtime, config.json, .env files, copied keys or your working vault.
 

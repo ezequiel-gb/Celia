@@ -4,7 +4,7 @@
   "read_only": false,
   "direct_operations": true,
   "roots": {
-    "Vault": {"path": "C:/CeliaData/Vault", "writable": true},
-    "Projects": {"path": "C:/CeliaData/Projects", "writable": true}
+    "Vault": {"path": "C:/CeliousData/Vault", "writable": true},
+    "Projects": {"path": "C:/CeliousData/Projects", "writable": true}
   }
 }

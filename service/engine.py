@@ -1,4 +1,4 @@
-"""Celia's local filesystem policy. No network or shell execution."""
+"""Celious's local filesystem policy. No network or shell execution."""
 from pathlib import Path, PureWindowsPath
 import difflib
 import base64
@@ -132,7 +132,7 @@ class Files:
                 raise ValueError('File changed; read again before writing')
             backup = self._backup(p, root, relative, 'write') if p.exists() else None
             self.audit('write', root, relative, status='begin', request_id=backup or '')
-            fd, temp = tempfile.mkstemp(prefix='celia-', suffix='.tmp', dir=p.parent)
+            fd, temp = tempfile.mkstemp(prefix='celious-', suffix='.tmp', dir=p.parent)
             try:
                 with os.fdopen(fd, 'wb') as out:
                     out.write(data)
@@ -394,7 +394,7 @@ class Files:
             if operation == 'write':
                 if p.exists():
                     (self.runtime / f'{ident}.backup').write_bytes(p.read_bytes())
-                fd, name = tempfile.mkstemp(prefix='celia-', suffix='.tmp', dir=p.parent)
+                fd, name = tempfile.mkstemp(prefix='celious-', suffix='.tmp', dir=p.parent)
                 try:
                     with os.fdopen(fd, 'w', encoding='utf-8', newline='') as out:
                         out.write(r['text'])
