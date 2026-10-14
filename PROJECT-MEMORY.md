@@ -5,11 +5,11 @@ This is the current upgrade, archive and retrieval guide. Celious physically sep
 ## Layout and identities
 
 ```text
-Second Brain/
+Archives/
   INDEX.md
   WORKFLOW.md
   LAYOUT.md
-  Projects/<project-name>/
+  <project-name>/
     PROJECT.md
     INDEX.md
     Sources/
@@ -38,7 +38,7 @@ Commands are for Command Prompt from the extracted source folder. Follow INSTALL
 py -3.12 setup.py --tunnel-id YOUR_TUNNEL_ID --second-brain --shortcuts
 ```
 
-Use the actual tunnel ID, never a secret, and deliberate --projects/--vault options only if changing default folders. Setup verifies dependencies and adds `"second_brain": {"root": "Projects", "path": "Celious/Second Brain"}`. It does NOT initialize/migrate notes. Fresh initialization creates empty Celious/shared collections and WORKFLOW.md through a separately reviewed plan. Existing workflows are preserved.
+Use the actual tunnel ID, never a secret, and deliberate --projects/--vault options only if changing default folders. Setup verifies dependencies and adds `"second_brain": {"root": "Projects", "path": "Archives", "flat_projects": true}`. It does NOT initialize/migrate notes. Fresh initialization creates empty Celious/shared collections and WORKFLOW.md through a separately reviewed plan. Existing workflows are preserved.
 
 This is an alternative to the file-only installer, not a second setup run afterward. If you already configured 14-tool v0.4, extract another complete source copy into a separate folder and use the reviewed upgrade.py --enable-memory procedure below; it preserves the existing configuration. Do not use --replace-config simply to enable memory.
 
@@ -86,7 +86,7 @@ Next change directory to the EXISTING installation, run its Python `-m pip check
 
 Migration uses journaled copy-and-redirect writes. Original source/knowledge/history files are preserved byte-for-byte in the selected project. Old paths become navigation-only redirects, excluded from knowledge scanning; they preserve previous citations/wiki links without duplicating facts. The layout marker activates last. Incomplete transactions block cooperating readers until recovery. Old-layout proposals remain private evidence but cannot be replayed.
 
-Memory disabled exposes the original 14 tools. Enabled v0.4 exposes **27 tools: 14 file tools and 13 memory endpoints**. No separate tunnel is created.
+Memory disabled exposes the original 14 tools. Enabled v0.4 exposes **27 tools: 14 file tools and 13 memory endpoints**. No separate tunnel is created. Existing configured memory paths/layouts remain compatible; do not move them by hand. For this installation the owner-selected archive home is Archives, and memory_projects reports the authoritative archive_root.
 
 ## Retrieval
 

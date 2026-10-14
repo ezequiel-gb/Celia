@@ -101,7 +101,7 @@ def main():
                   'Projects': {'path': projects.as_posix(), 'writable': True}},
     }
     if args.second_brain:
-        config['second_brain'] = {'root': 'Projects', 'path': 'Celious/Second Brain'}
+        config['second_brain'] = {'root': 'Projects', 'path': 'Archives', 'flat_projects': True}
     # Validate filesystem boundaries using the same policy as the server before saving.
     sys.path.insert(0, str(BASE / 'service'))
     from engine import Files

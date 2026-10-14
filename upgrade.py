@@ -54,7 +54,7 @@ def main():
         parser.error('Dependency lock differs; use a reviewed environment upgrade before this source-only overlay')
     changes.update({name: checked(BASE/name).read_bytes() for name in GUIDES})
     if args.enable_memory and 'second_brain' not in config:
-        config['second_brain'] = dict(root='Projects', path='Celious/Second Brain')
+        config['second_brain'] = dict(root='Projects', path='Archives', flat_projects=True)
         changes['service/config.json'] = (json.dumps(config, indent=2)+'\n').encode()
     for name in changes:
         checked(live/name)

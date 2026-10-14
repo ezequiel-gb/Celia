@@ -18,6 +18,15 @@ class ProjectBrain(LegacyBrain):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.local = threading.local()
+        self.flat_projects = bool(self.files.config.get('second_brain', {}).get('flat_projects', False))
+
+    def project_container(self):
+        layout = self.layout()
+        return layout.get('project_container', 'Projects') if layout else ('' if self.flat_projects else 'Projects')
+
+    def project_path(self, name):
+        container = self.project_container()
+        return (container+'/' if container else '')+name
 
     @contextmanager
     def locked(self):
@@ -53,12 +62,15 @@ class ProjectBrain(LegacyBrain):
         if not self.layout():
             return []
         paths = ['Shared Knowledge']
-        base = self.path('Projects')
+        container = self.project_container()
+        base = self.path(container)
         if base.exists():
             for node in sorted(base.iterdir()):
-                self.path('Projects/' + node.name)
+                if not container and (node.name in {'Shared Knowledge','Inbox','Sources','Knowledge','History','Projects'} or node.name.startswith('.')):
+                    continue
+                self.path(self.project_path(node.name))
                 if node.is_dir():
-                    paths.append('Projects/' + node.name)
+                    paths.append(self.project_path(node.name))
         result = []
         for relative in paths:
             if not self.path(relative + '/PROJECT.md').exists():
@@ -214,8 +226,10 @@ class ProjectBrain(LegacyBrain):
     def validate_name(self, name):
         if not isinstance(name, str) or not name.strip() or len(name) > 80 or '/' in name or '\\' in name:
             raise ValueError('Use a nonempty project folder name below 81 characters')
-        self.path('Projects/'+name, write=True)
-        if self.path('Projects/'+name).exists() and any(p.is_file() for p in self.path('Projects/'+name).rglob('*')):
+        if not self.project_container() and name.casefold() in {'shared knowledge','inbox','sources','knowledge','history','projects'}:
+            raise ValueError('Reserved archive folder name')
+        self.path(self.project_path(name), write=True)
+        if self.path(self.project_path(name)).exists() and any(p.is_file() for p in self.path(self.project_path(name)).rglob('*')):
             raise ValueError('Project folder already exists')
 
     def plan_project(self, name):
@@ -223,7 +237,7 @@ class ProjectBrain(LegacyBrain):
             self.healthy()
             self.project()
             self.validate_name(name)
-            p, descriptor = self.descriptor(name, 'project', 'Projects/'+name)
+            p, descriptor = self.descriptor(name, 'project', self.project_path(name))
             changes = [descriptor] + self.index_changes(self.records(), self.projects()+[p])
             return self.make_plan(changes, [], 'Create separate project memory: '+name, 'project', project_id=p['id'],
                                   directories=[p['path']+'/'+x for x in ['Sources','Knowledge','History']], new_collections=[p['path']])
@@ -254,7 +268,7 @@ class ProjectBrain(LegacyBrain):
             issues = super().inspect()['issues']
             if any(x['kind'] != 'pending_review' for x in issues):
                 raise ValueError('Resolve legacy integrity issues before migration')
-            p, pc = self.descriptor(name, 'project', 'Projects/'+name)
+            p, pc = self.descriptor(name, 'project', self.project_path(name))
             shared, sc = self.descriptor('Shared Knowledge', 'shared', 'Shared Knowledge')
             changes, migrated = [pc, sc], []
             mapping = []
@@ -286,7 +300,7 @@ class ProjectBrain(LegacyBrain):
                     'versions. Read the installed PROJECT-MEMORY.md for limits and recovery. '
                     'There is no continuous chat monitor or guaranteed automatic tool invocation.\n'))
             # Activate the new layout last. Recovery blocks readers during partial writes.
-            changes.append(self.change('LAYOUT.md', render(dict(version=4, default_project_id=p['id'], shared_project_id=shared['id']),
+            changes.append(self.change('LAYOUT.md', render(dict(version=4, default_project_id=p['id'], shared_project_id=shared['id'],project_container=self.project_container()),
                                                           '# Project-based memory layout\n')))
             return self.make_plan(changes, [], 'Preserve records byte-for-byte in project memory with legacy navigation redirects',
                                   'migration', migration=mapping, default_project_id=p['id'],

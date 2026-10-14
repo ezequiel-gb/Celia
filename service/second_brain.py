@@ -425,8 +425,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path)
     parser.add_argument('--runtime', type=Path)
-    parser.add_argument('--root', default='Projects')
-    parser.add_argument('--prefix', default='Celious/Second Brain')
+    parser.add_argument('--root')
+    parser.add_argument('--prefix')
     sub = parser.add_subparsers(dest='command', required=True)
     archive = sub.add_parser('plan-archive')
     archive.add_argument('input', type=Path, help='Private JSON with title, text, source_ref, completeness, claims')
@@ -463,7 +463,9 @@ def main():
     args = parser.parse_args()
     config = json.loads(args.config.read_text('utf-8-sig')) if args.config else None
     from project_memory import ProjectBrain
-    brain = ProjectBrain(Files(config, args.runtime), args.root, args.prefix)
+    files=Files(config,args.runtime)
+    spec=files.config.get('second_brain',{})
+    brain = ProjectBrain(files,args.root or spec.get('root','Projects'),args.prefix or spec.get('path','Archives'))
     if args.command == 'plan-archive':
         result = brain.plan_archive(**json.loads(args.input.read_text('utf-8')))
     elif args.command == 'commit':

@@ -110,7 +110,7 @@ The 14 file endpoints are list_roots, list_directory, read_document, read_file_b
 setup.py generates private service/config.json. config.example.json is a portable example, not a file to copy over a working installation. It contains tunnel_id (identifier, not secret), plugin_url, read_only, direct_operations and roots with path/writable. Enabling memory adds:
 
 ```json
-"second_brain": {"root": "Projects", "path": "Celious/Second Brain"}
+"second_brain": {"root": "Projects", "path": "Archives", "flat_projects": true}
 ```
 
 The path is relative to an existing root and cannot grant new filesystem access. The runtime secret is not stored in config. Custom memory prefixes must be used consistently with CLI --root/--prefix; the documented default commands assume the default prefix. Never put generated profiles/runtime/config or authorized user files in source control.

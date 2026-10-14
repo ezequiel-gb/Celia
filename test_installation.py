@@ -25,10 +25,11 @@ async def probe(service, initialize, legacy, count, cli=False):
     from project_memory import ProjectBrain
     config=json.loads((service/'config.json').read_text('utf-8'))
     files=Files(config,service/'.runtime')
-    prefix=Path(config['roots']['Projects']['path'])/'Celious/Second Brain'
+    memory=config.get('second_brain',dict(path='Archives'))
+    prefix=Path(config['roots']['Projects']['path'])/memory['path']
     original={}
     if legacy:
-        old=Brain(files)
+        old=Brain(files,prefix=memory['path'])
         evidence='User: Use portable Markdown.\r\n'
         plan=old.plan_archive('Synthetic legacy evidence',evidence,'synthetic public fixture','excerpt',[
             dict(type='requirement',title='Portable memory',topic='Memory',key='format',value='Markdown',
@@ -57,7 +58,7 @@ async def probe(service, initialize, legacy, count, cli=False):
             assert not inspected['issues'] and inspected['layout']=='project-v4'
             assert (prefix/'WORKFLOW.md').is_file()
             if legacy:
-                brain=ProjectBrain(files)
+                brain=ProjectBrain(files,prefix=memory['path'])
                 assert {r['meta']['id']:digest(brain.path(r['path']).read_bytes()) for r in brain.records()}==original
                 assert (prefix/'WORKFLOW.md').read_bytes()==b'# Existing workflow\r\nPreserve this.\r\n'
                 hits=unpack(await client.call_tool('memory_search',dict(query='portable Markdown')))['hits']
@@ -127,7 +128,7 @@ def main():
         run(sys.executable,BASE/'upgrade.py','--installation',legacy,'--backup-dir',workspace/'private backups',
             '--enable-memory','--apply','--connection-off')
         after=json.loads(config_path.read_text());spec=after.pop('second_brain')
-        assert after==before and spec==dict(root='Projects',path='Celious/Second Brain')
+        assert after==before and spec==dict(root='Projects',path='Archives',flat_projects=True)
         assert profile.read_bytes()==profile_bytes and vault.read_bytes()==b'Existing file\r\n'
         assert (legacy/'service/engine.py').read_bytes()==(BASE/'service/engine.py').read_bytes()
         checkpoints=list((workspace/'private backups').glob('*/overlay-before.zip'));assert len(checkpoints)==1

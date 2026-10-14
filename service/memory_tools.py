@@ -45,7 +45,7 @@ def register(mcp, files, invoke, read, mutation, stage):
         def listing():
             with brain.locked():
                 brain.healthy()
-                return dict(projects=brain.projects(), layout=brain.layout())
+                return dict(projects=brain.projects(), layout=brain.layout(),archive_root=dict(root=brain.root,path=brain.prefix))
         return invoke(listing)
 
     @mcp.tool(annotations=stage)

@@ -61,3 +61,9 @@ The original 13 memory, 9 file-policy and 4 tray tests remain the regression bas
 
 The isolated stdio test advertises 27 tools and exercises all 13 memory endpoints, including supersede preview and rejection. A fresh second process retrieves persisted project data. The original 14-tool stdio workflow and real hidden parent/child shutdown remain tested separately. These checks use disposable roots and no real key or tunnel. Production migration/account refresh and model-selected proactive behavior belong in the private deployment report; unit tests alone do not prove universal tool invocation. No new GitHub workflow run/publication is claimed.
 
+
+## Local archive organisation correction — 14 October 2026
+
+Fresh memory opt-in now uses Archives with flat project folders. Existing layouts/configured prefixes remain supported. memory_projects reports the authoritative archive_root; server guidance directs conversation retention through the dedicated workflow. Optional read_path_aliases provide validated same-root, read-only compatibility for historical citations and reject writes through old locations. The CLI follows the configured memory root/prefix by default. A new isolated case covers flat collections, reserved names and alias boundary/write denial. This correction is local and not yet validated by a new hosted run; previous hosted success applies to its recorded commit only.
+
+The flat-layout correction passed real disposable fresh-install/public-v0.2 upgrade acceptance locally on 14 October 2026, including CLI initialization, MCP migration and full suites: 46 passed and one expected private-baseline skip. The project suite separately passed all 18 with the private fixture available. Live reorganisation used an independently verified private copy and did not run synthetic mutation fixtures against production. The new read-only alias case verifies historical citation resolution, denied old-location writes and traversal denial.

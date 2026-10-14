@@ -16,6 +16,10 @@ def invoke(fn, *args, **kwargs):
 
 files = Files()
 mcp = MCPServer('Celious Files', version='0.4.0', instructions=(
+    'Archive only under the single configured archive_root returned by memory_projects; '
+    'project folders belong inside it. Never invent another archive location or create '
+    'Conversation Archives folders under Sources/Knowledge. Archive supplied conversations '
+    'through memory_archive_preview and exact reviewed commit, not raw Markdown writes. '
     'Keep project context separate: call memory_projects and use the explicit project_id. '
     'Retrieve relevant project/shared memory before work; cross-project search must be explicit. '
     'When the active conversation contains decisions, requirements, preferences, fixes, lessons '

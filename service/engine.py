@@ -50,7 +50,7 @@ class Files:
             if stat.S_ISREG(s.st_mode) and s.st_nlink > 1:
                 raise PermissionError('Hard-linked files are blocked')
 
-    def path(self, root, relative='', write=False):
+    def path(self, root, relative='', write=False, _aliases=True):
         try:
             if root not in self.roots:
                 raise PermissionError('Unknown root')
@@ -65,6 +65,15 @@ class Files:
             reserved = {'CON', 'PRN', 'AUX', 'NUL', *(f'COM{i}' for i in range(1, 10)), *(f'LPT{i}' for i in range(1, 10))}
             if any(x.split('.')[0].upper() in reserved or any(c in x for c in '<>"|?*') for x in parts):
                 raise PermissionError('Windows special paths are blocked')
+            normalized='/'.join(x for x in parts if x)
+            aliases=self.config.get('read_path_aliases',{}).get(root,{}) if _aliases else {}
+            for old,target in sorted(aliases.items(),key=lambda item:len(item[0]),reverse=True):
+                if normalized==old or normalized.startswith(old+'/'):
+                    if write:
+                        raise PermissionError('Historical path is read-only; use the canonical archive path')
+                    resolved=target+normalized[len(old):]
+                    # Validate alias targets under exactly the same root/policy, without chains.
+                    return self.path(root,resolved,_aliases=False)
             spec = self.roots[root]
             if write and (self.config.get('read_only', False) or not spec.get('writable', False)):
                 raise PermissionError('This root is read-only')

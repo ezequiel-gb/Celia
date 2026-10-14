@@ -45,6 +45,22 @@ class ProjectTests(unittest.TestCase):
         self.commit(preview)
         self.b=preview['project_id']
 
+    def test_flat_archive_home_and_read_only_historical_aliases(self):
+        self.files.config['second_brain']=dict(root='Projects',path='Archives',flat_projects=True)
+        brain=ProjectBrain(self.files,prefix='Archives')
+        preview=brain.plan_migrate();brain.commit(preview['plan_id'],preview['plan_sha256'])
+        self.assertEqual(brain.project()['path'],'Celious')
+        preview=brain.plan_project('Tango');brain.commit(preview['plan_id'],preview['plan_sha256'])
+        self.assertTrue(brain.path('Tango/PROJECT.md').is_file())
+        self.assertFalse(brain.path('Projects').exists())
+        self.assertEqual(brain.inspect()['issues'],[])
+        with self.assertRaises(ValueError):brain.plan_project('Inbox')
+        self.files.config['read_path_aliases']={'Projects':{'Old/Index.md':'Archives/INDEX.md'}}
+        self.assertEqual(self.files.path('Projects','Old/Index.md'),brain.path('INDEX.md'))
+        with self.assertRaises(PermissionError):self.files.mutation_path('Projects','Old/Index.md')
+        self.files.config['read_path_aliases']['Projects']['Escape']='../outside'
+        with self.assertRaises(PermissionError):self.files.path('Projects','Escape')
+
     def archive(self, project, text='User: Use Markdown', claims=None):
         plan=self.brain.plan_archive('Supplied test transcript',text,'synthetic session','excerpt',[claim()] if claims is None else claims,project)
         self.commit(plan)
