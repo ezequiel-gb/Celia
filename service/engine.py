@@ -50,7 +50,7 @@ class Files:
             if stat.S_ISREG(s.st_mode) and s.st_nlink > 1:
                 raise PermissionError('Hard-linked files are blocked')
 
-    def path(self, root, relative='', write=False):
+    def path(self, root, relative='', write=False, _aliases=True):
         try:
             if root not in self.roots:
                 raise PermissionError('Unknown root')
@@ -65,6 +65,16 @@ class Files:
             reserved = {'CON', 'PRN', 'AUX', 'NUL', *(f'COM{i}' for i in range(1, 10)), *(f'LPT{i}' for i in range(1, 10))}
             if any(x.split('.')[0].upper() in reserved or any(c in x for c in '<>"|?*') for x in parts):
                 raise PermissionError('Windows special paths are blocked')
+            normalized_parts=[x for x in parts if x]
+            aliases=self.config.get('read_path_aliases',{}).get(root,{}) if _aliases else {}
+            for old,target in sorted(aliases.items(),key=lambda item:len(item[0]),reverse=True):
+                old_parts=old.replace('\\', '/').split('/')
+                if [x.casefold() for x in normalized_parts[:len(old_parts)]] == [x.casefold() for x in old_parts]:
+                    if write:
+                        raise PermissionError('Historical path is read-only; use the canonical archive path')
+                    resolved='/'.join([target,*normalized_parts[len(old_parts):]])
+                    # Validate alias targets under exactly the same root/policy, without chains.
+                    return self.path(root,resolved,_aliases=False)
             spec = self.roots[root]
             if write and (self.config.get('read_only', False) or not spec.get('writable', False)):
                 raise PermissionError('This root is read-only')
@@ -128,7 +138,8 @@ class Files:
             if not p.parent.is_dir():
                 raise ValueError('Create the parent folder first')
             current = self.fingerprint(p)
-            if expected_sha256 is not None and current != expected_sha256:
+            # An empty digest explicitly requires an absent destination.
+            if expected_sha256 is not None and current != (None if expected_sha256 == '' else expected_sha256):
                 raise ValueError('File changed; read again before writing')
             backup = self._backup(p, root, relative, 'write') if p.exists() else None
             self.audit('write', root, relative, status='begin', request_id=backup or '')

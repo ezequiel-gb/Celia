@@ -18,7 +18,7 @@ A Markdown vault adds durable context. Project notes, decisions and next actions
 | Celious Files plugin | Present the server's tools in a conversation | ChatGPT plugin configuration |
 | Secure MCP Tunnel | Transport requests between OpenAI and the local client | OpenAI tunnel plus local client |
 | tunnel-client | Run the private connection and invoke the MCP server | Windows background process |
-| Celious MCP server | Expose the 14 tools and enforce file policy | Local Python process |
+| Celious MCP server | Expose 14 file tools, plus 13 opt-in memory tools, and enforce file policy | Local Python process |
 | Celious tray switch | Start, check and stop the local connection | Windows icon and small control panel |
 | Projects and Vault | Store the files you authorise | Selected local directories |
 
@@ -44,13 +44,30 @@ The tunnel uses an outbound connection, allowing this design to keep the file se
 
 ## Example: editing a project note
 
+### Practical file prompts
+
+Use actual configured aliases and relative paths. These examples use synthetic names; review write requests before applying them to important files.
+
+| Task | Prompt | Operation state |
+| --- | --- | --- |
+| Browse | “List Projects/Example with list_directory; show folders and files.” | Read-only |
+| Read document | “Read Projects/Example/brief.pdf with read_document; follow pagination and disclose missing extraction.” | Read-only; no OCR |
+| Find | “Search filenames and extracted content under Projects/Example for deployment.” | Read-only, bounded |
+| Create | “Create Projects/Example/status.md with this exact supplied text.” | Direct write, not just a proposal |
+| Edit | “Read status.md, then replace this unique exact sentence with the supplied replacement.” | Read then backed-up direct edit |
+| Organise | “Create Projects/Example/Archive, then move draft.md there without overwriting.” | Direct folder/move operation |
+| Recover | “Recover only deletion ID returned for my synthetic test file with restore_deleted.” | Restore if original path is free |
+| Stage instead | “Use propose_write for this Markdown change; show the diff and leave it pending.” | Proposal; local review.py applies/rejects |
+
+Rich-document extraction is not a formatted editing workflow. For a valid DOCX/XLSX/PDF write, supply a valid binary payload within limits. Recoverable deletion is private recovery storage, not permanent purge or the Windows Recycle Bin. Memory changes should use the coordinated memory endpoints rather than raw-file edits.
+
 You ask: “Use Celious Files to read Projects/Example/status.md and change the deadline to Friday.” ChatGPT reads the file through a tool, requests an exact-text edit and receives its result. The server checks that the root exists, is writable and contains the allowed relative path. It saves the previous content before updating the file. You can inspect the result directly in Windows.
 
 The tray controls availability. ON starts the local tunnel and server. Hiding the panel leaves them running. OFF ends the connection; Exit also discards the tray's cached secret. Starting the icon at login leaves it OFF until you decide to connect.
 
 ## What this release can do
 
-The 14 tools cover root/directory listing, document reads, search, paginated binary reads, direct writes and text edits, folder creation, within-root moves, recoverable deletion/restoration and optional proposed changes. The exact implementation is in `service/server.py` and `service/engine.py`.
+The 14 filesystem tools cover listing, document/binary reads, search, direct writes/edits, folders, moves, recoverable deletion/restoration and proposals. v0.4 optionally adds 13 memory endpoints for separate project collections, cited retrieval, read-only candidates, Inbox review, exact authorized commits, supersession/history and recovery. Default setup keeps 14 tools; setup --second-brain enables 27 without silently initializing. Follow [PROJECT-MEMORY.md](PROJECT-MEMORY.md) for reviewed setup/upgrade/migration.
 
 The server extracts text from PDF, DOCX, ODT and XLSX files and reads ordinary text/code files. It does not provide OCR or rich-document layout editing. Binary writes must contain valid bytes for the intended format. File write/read limits and format behaviour are in README.md.
 
@@ -64,9 +81,49 @@ These are application checks, not a separate Windows sandbox or independently au
 
 ## How this relates to the wider Celious project
 
-This source release is the **file-access layer** plus a starter vault and a desktop connection switch. It does not contain Celia Core, Celia Engine, Miles, autonomous agent supervision, email processing, Git promotion workflows or the broader architecture described in reference material. Installing this package does not create those components or reproduce a nine-workspace deployment.
+This v0.4 source release contains the file-access layer, starter vault, desktop switch and opt-in project-aware Second Brain. It does not contain Celia Core, Celia Engine, Miles, autonomous agent supervision, email processing, Git promotion workflows or the broader architecture in reference material. There is no universal chat monitor or guaranteed proactive tool activation. Installing this package does not reproduce a nine-workspace deployment.
 
 Those capabilities would require their own implementation, configuration and validation. The file-access layer can provide a useful foundation without claiming that the full ecosystem has been delivered.
+
+## Developer map
+
+| File | Responsibility |
+| --- | --- |
+| setup.py / Install.cmd | Fresh environment, locked dependencies, checked tunnel client, folders/config/profile and optional shortcuts; no silent memory initialization |
+| upgrade.py | Reviewed compatible source overlay, private checkpoint, preservation and rollback; does not migrate notes |
+| service/engine.py | Root/path/file policy, document extraction, expected hashes, recoverable operations and private audit metadata |
+| service/server.py / memory_tools.py | MCP tool definitions/annotations, bounded errors and opt-in memory registration |
+| service/second_brain.py | Portable metadata, evidence/legacy coordinator, locking/journals/recovery and current CLI |
+| service/project_memory.py | Project descriptors/layout, scoped records/search, reviewed migration, Inbox, candidates, supersession and indexes |
+| service/connect.py / tray_core.py / tray.py | Credential input, outbound tunnel, loopback readiness and hidden process-tree lifecycle |
+| service/review.py | Original optional filesystem proposal review; separate from exact memory-plan commits |
+| package.py / test_package.py | Explicit public allowlist, history/privacy checks, deterministic package and tampering/recovery fixtures |
+| test_installation.py | Real disposable fresh install, pinned v0.2/v0.3 source upgrades and fresh-environment suites |
+| service/test_*.py / Windows workflow | File/tray/legacy/project/MCP acceptance and public CI |
+
+MCP is the protocol carrying tool descriptions/calls/results. A root alias is a short name (Projects or Vault) mapped to an authorized folder. A profile is the local tunnel launch recipe. A plan digest is a SHA-256 fingerprint of the exact reviewed proposal; a journal records coordinated transaction intent for recovery. These are local software components, not a new model or unrestricted shell exposed to ChatGPT.
+
+The 14 file endpoints are list_roots, list_directory, read_document, read_file_bytes, search_files (reads); create_directory, write_file, edit_file, move_file, delete_file, restore_deleted (direct/recoverable writes); propose_folder, propose_move, propose_write (local review). PROJECT-MEMORY.md classifies all 13 memory endpoints, including previews that may queue an unassigned candidate.
+
+### Configuration and data format
+
+setup.py generates private service/config.json. config.example.json is a portable example, not a file to copy over a working installation. It contains tunnel_id (identifier, not secret), plugin_url, read_only, direct_operations and roots with path/writable. Enabling memory adds:
+
+```json
+"second_brain": {"root": "Projects", "path": "Archives", "flat_projects": true}
+```
+
+The path is relative to an existing root and cannot grant new filesystem access. The runtime secret is not stored in config. The CLI follows the configured root/path unless --root/--prefix explicitly overrides them; use overrides consistently. Fresh layouts store an empty project_container in LAYOUT.md for direct project folders; older layouts retain their Projects container. Never put generated profiles/runtime/config or authorized user files in source control.
+
+Optional private read_path_aliases map historical paths to canonical paths within the same authorized root. Matching follows Windows case-insensitive path semantics and whole folder segments. Targets receive the same path/link checks, alias chains are not followed, and writes through historical paths are denied. This preserves old citations after a separately reviewed relocation; upgrading source alone does not relocate existing notes or generate aliases.
+
+Each project has PROJECT.md (stable UUID/display name), INDEX.md and separate Sources/Knowledge/History. Restricted YAML frontmatter uses JSON-encoded values; source bodies preserve decoded text/CRLF. Knowledge holds type/topic/key/value, status/epistemic/uncertainty, source IDs and exact quote/character ranges. LAYOUT.md selects the default/shared IDs. Inbox candidates are unassigned review material; redirects preserve legacy citation paths.
+
+ProjectBrain reuses file policy and the global cooperating-process lock. Plans bind the full canonical Markdown snapshot and exact digest. Journals precede writes; failed writes restore original versions or preserve newer unrelated edits for review. Migration copies original bytes, creates redirects/indexes and activates the layout last. Sources prove what was supplied, not external truth; the client/operator must review semantic support. Raw file tools bypass multi-note coordination and project scope is not an OS sandbox.
+
+### Safe extension procedure
+
+Use a dedicated source branch and disposable roots; never develop mutation tests against the live installation. Preserve existing tool names/arguments where feasible and explicitly document intentional compatibility changes such as unassigned legacy archive calls entering Inbox. Add meaningful policy/migration/workflow tests, update existing guides and package allowlist, and run the permanent PUBLISHING.md checklist. New dependencies, permissions, observers or credential behavior need deliberate design/review. Do not claim a feature tested merely because its code exists or an old CI run passed.
 
 ## Installation and project status
 

@@ -2,7 +2,21 @@
 
 Celious is our independent Windows implementation, inspired by the original Celia project. References to Celia in original materials and to components such as Celia Core describe that original project, not a claim that those components are installed here.
 
-Celious Files connects ChatGPT to selected local folders through an MCP file server and an outbound OpenAI Secure MCP Tunnel. A Windows tray switch starts and stops the connection without a terminal. Source release: 0.2.0.
+Celious Files connects ChatGPT to selected local folders through an MCP file server and an outbound OpenAI Secure MCP Tunnel. A Windows tray switch starts and stops the connection without a terminal. Source release: 0.4.0.
+
+## Second Brain extension
+
+Version 0.4.0 adds physical project collections, stable project identities, explicit project/shared/cross-project retrieval, supervised Inbox routing and quote-backed candidate identification. It preserves v0.3.0 evidence, decision history and recovery. [Project memory setup, migration and limits](PROJECT-MEMORY.md). Existing configurations without memory retain the original 14 tools; enabled memory exposes 13 endpoints (27 tools total) on the same service/tunnel. Identification depends on model/tool invocation; no continuous monitor, paid model API calls or background workers are added.
+
+The default single memory home is Projects/Archives, with project folders directly inside it. Existing explicitly configured roots/layouts remain compatible. Fresh setup: use setup.py --second-brain, then separately review and commit initialization. Existing public v0.2/private v0.3 installations: use the reviewed upgrade.py overlay from a separate source folder, with a verified full backup and actual connection OFF; the engine update is included. [Complete commands and sequencing](PROJECT-MEMORY.md#fresh-installation-and-reviewed-initialization). The public source does not include private notes, reports or the optional private GUI snapshot builder.
+
+## Start here
+
+1. [Understand the project](PROJECT-EXPLAINED.md): capabilities, components, terminology and limits.
+2. [Install from zero](INSTALLATION-A-TO-Z.md): Windows/Python, account/tunnel, folders, credentials, connection and first-use checks.
+3. [Enable or upgrade Second Brain](PROJECT-MEMORY.md): separate v0.2/v0.3/fresh paths, reviewed initialization, project retrieval and practical memory prompts.
+4. [Troubleshoot and recover](TROUBLESHOOTING.md), read [security boundaries](SECURITY.md), and inspect [actual validation](VALIDATION.md).
+5. Developers and maintainers: [architecture](PROJECT-EXPLAINED.md#developer-map) and [permanent release checklist](PUBLISHING.md#permanent-release-standard).
 
 ## Does Celious Files cost anything?
 
@@ -69,7 +83,7 @@ service\.venv\Scripts\python.exe service/test_tray.py
 service\.venv\Scripts\python.exe service/tray.py --self-test
 ```
 
-These cover 9 filesystem policy tests, 4 tray lifecycle tests, discovery of 14 MCP tools and actual stdio create/write/edit/read/move/delete calls, plus termination of a hidden Windows parent and child process. They require no real API key. The supplied Windows GitHub Actions workflow installs with a dummy tunnel ID and runs these checks; it does not connect to an account or grant repository workflows a secret.
+These cover the filesystem/tray foundation. For the complete current test organisation, see VALIDATION.md and PUBLISHING.md: legacy/project memory, all 13 memory endpoints, package privacy/integrity and real disposable fresh-install/pinned-v0.2/v0.3 upgrades are also included. Public fixtures yield 46 passing unit tests and one intentional private-backup skip; installer scenarios repeat relevant suites. No real API key is needed. CI uses dummy IDs, not account connections or secrets.
 
 The installer uses requirements.lock.txt, which records the tested direct and transitive Python dependency versions. requirements.txt describes the six direct dependencies for future deliberate upgrades. Python patch versions, package hashes and the Windows runner image are not frozen; this is a repeatable installation recipe rather than a byte-identical build. See [VALIDATION.md](VALIDATION.md) for the release's actual verification results.
 
@@ -93,4 +107,4 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md), [SECURITY.md](SECURITY.md) and [PU
 
 This package connects a private server. Publishing its source on GitHub does not itself publish a ChatGPT marketplace plugin. For costs and account access, use the section at the beginning of this README.
 
-No licence has been assigned to this source package. Its owner should choose a licence before distributing it for general reuse. Downloaded dependencies retain their own licences; they are not bundled in the source ZIP.
+Celious source is distributed under the [MIT licence](LICENSE). Preserve its copyright and licence notice. Downloaded dependencies retain their own licences and are not bundled in the source ZIP.

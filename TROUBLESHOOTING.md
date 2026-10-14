@@ -22,4 +22,25 @@
 
 Review logs locally before sharing: paths and account metadata may appear even when file contents and secrets are omitted. Never upload .runtime, config.json, .env files, copied keys or your working vault.
 
+## Second Brain and upgrade diagnostics
+
+| Symptom | Check and action |
+| --- | --- |
+| Only 14 tools | Memory is opt-in. Inspect private config for second_brain; use --second-brain on fresh setup or reviewed upgrade --enable-memory. Restart/refresh discovery. Do not replace existing roots/config with an example. |
+| 27 tools but project/layout unavailable | Tools enabled is not initialized. Review plan-migrate/commit while OFF, or use the ON/refresh-first MCP sequence in PROJECT-MEMORY.md. |
+| Migration says already initialized | LAYOUT.md is version 4. Do not rerun; list projects, inspect and retrieve instead. |
+| Upgrade requires OFF or rejects busy state | Stop actual clients for that installation/tunnel; do not edit tray-status.json to bypass the guard. --connection-off is your acknowledgement, not a stop command. |
+| Upgrade rejects dependency lock or customized code | Do not bypass it. Review dependencies/environment and customized module diffs separately; the helper is a source overlay for compatible locks. |
+| Stale/rejected/used plan or digest mismatch | Read current notes and prepare/review a new preview. Never substitute a digest or replay old-layout proposals. |
+| Incomplete transaction after interruption | Turn OFF; preserve current files/runtime and run the installation's Python service/second_brain.py recover. Inspect afterward. If it reports unrelated edits, preserve both versions and review locally. |
+| Unexpected project results | Verify the real project_id, include_shared and cross_project flags; defaults are Celious plus shared. Search is lexical OR matching. |
+| Pending/conflicting knowledge | Review original evidence and uncertainty. Explicit supersession requires same project/topic/key and a reviewed non-provisional replacement; never silently promote a hypothesis. |
+| Missing or altered source/quote/index | Inspect and preserve evidence. memory_rebuild_preview repairs indexes only through reviewed commit; it cannot invent missing source truth. Restore intended damaged files from a verified consistent backup. |
+
+## Complete rollback
+
+Keep the connection OFF, preserve post-backup work separately, verify backup hashes and extract into a disposable folder first. Restore code/config and canonical memory from the SAME pre-upgrade snapshot, not a mixture of v0.3 code and v4 layout. An overlay checkpoint alone is not a full data/environment backup. Preserve v4-only/newer files separately instead of deleting them. Follow your manifest paths; do not overwrite unrelated folders or historical backups. Recreate the environment if paths changed, verify dependencies/inspection/roots/profile, then restart and privately enter the existing key if Exit cleared it.
+
+Automated tests exercise rollback/interruption and synthetic migration; the maintainer also tested isolated restoration of a captured baseline. A real production rollback, another account's reauthentication and restoration of Windows ACLs/alternate streams/cloud settings are not claimed as performed. Consult VALIDATION.md before treating a recovery procedure as an executed acceptance check.
+
 Reference: [OpenAI Secure MCP Tunnel troubleshooting](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
