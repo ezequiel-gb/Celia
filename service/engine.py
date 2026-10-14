@@ -65,13 +65,14 @@ class Files:
             reserved = {'CON', 'PRN', 'AUX', 'NUL', *(f'COM{i}' for i in range(1, 10)), *(f'LPT{i}' for i in range(1, 10))}
             if any(x.split('.')[0].upper() in reserved or any(c in x for c in '<>"|?*') for x in parts):
                 raise PermissionError('Windows special paths are blocked')
-            normalized='/'.join(x for x in parts if x)
+            normalized_parts=[x for x in parts if x]
             aliases=self.config.get('read_path_aliases',{}).get(root,{}) if _aliases else {}
             for old,target in sorted(aliases.items(),key=lambda item:len(item[0]),reverse=True):
-                if normalized==old or normalized.startswith(old+'/'):
+                old_parts=old.replace('\\', '/').split('/')
+                if [x.casefold() for x in normalized_parts[:len(old_parts)]] == [x.casefold() for x in old_parts]:
                     if write:
                         raise PermissionError('Historical path is read-only; use the canonical archive path')
-                    resolved=target+normalized[len(old):]
+                    resolved='/'.join([target,*normalized_parts[len(old_parts):]])
                     # Validate alias targets under exactly the same root/policy, without chains.
                     return self.path(root,resolved,_aliases=False)
             spec = self.roots[root]

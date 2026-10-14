@@ -58,6 +58,12 @@ class ProjectTests(unittest.TestCase):
         self.files.config['read_path_aliases']={'Projects':{'Old/Index.md':'Archives/INDEX.md'}}
         self.assertEqual(self.files.path('Projects','Old/Index.md'),brain.path('INDEX.md'))
         with self.assertRaises(PermissionError):self.files.mutation_path('Projects','Old/Index.md')
+        self.assertEqual(self.files.path('Projects','oLD\\INDEX.MD'),brain.path('INDEX.md'))
+        with self.assertRaises(PermissionError):self.files.mutation_path('Projects','oLD\\INDEX.MD')
+        self.files.config['read_path_aliases']['Projects']['Old/Collection']='Archives/Tango'
+        self.assertEqual(self.files.path('Projects','OLD/COLLECTION/PROJECT.md'),brain.path('Tango/PROJECT.md'))
+        with self.assertRaises(PermissionError):self.files.mutation_path('Projects','old/collection/new.md')
+        self.assertNotEqual(self.files.path('Projects','Old/CollectionExtra'),brain.path('Tango'))
         self.files.config['read_path_aliases']['Projects']['Escape']='../outside'
         with self.assertRaises(PermissionError):self.files.path('Projects','Escape')
 

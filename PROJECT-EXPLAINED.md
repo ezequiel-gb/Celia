@@ -98,7 +98,7 @@ Those capabilities would require their own implementation, configuration and val
 | service/connect.py / tray_core.py / tray.py | Credential input, outbound tunnel, loopback readiness and hidden process-tree lifecycle |
 | service/review.py | Original optional filesystem proposal review; separate from exact memory-plan commits |
 | package.py / test_package.py | Explicit public allowlist, history/privacy checks, deterministic package and tampering/recovery fixtures |
-| test_installation.py | Real disposable fresh install, pinned public baseline upgrade and fresh-environment suites |
+| test_installation.py | Real disposable fresh install, pinned v0.2/v0.3 source upgrades and fresh-environment suites |
 | service/test_*.py / Windows workflow | File/tray/legacy/project/MCP acceptance and public CI |
 
 MCP is the protocol carrying tool descriptions/calls/results. A root alias is a short name (Projects or Vault) mapped to an authorized folder. A profile is the local tunnel launch recipe. A plan digest is a SHA-256 fingerprint of the exact reviewed proposal; a journal records coordinated transaction intent for recovery. These are local software components, not a new model or unrestricted shell exposed to ChatGPT.
@@ -113,7 +113,9 @@ setup.py generates private service/config.json. config.example.json is a portabl
 "second_brain": {"root": "Projects", "path": "Archives", "flat_projects": true}
 ```
 
-The path is relative to an existing root and cannot grant new filesystem access. The runtime secret is not stored in config. Custom memory prefixes must be used consistently with CLI --root/--prefix; the documented default commands assume the default prefix. Never put generated profiles/runtime/config or authorized user files in source control.
+The path is relative to an existing root and cannot grant new filesystem access. The runtime secret is not stored in config. The CLI follows the configured root/path unless --root/--prefix explicitly overrides them; use overrides consistently. Fresh layouts store an empty project_container in LAYOUT.md for direct project folders; older layouts retain their Projects container. Never put generated profiles/runtime/config or authorized user files in source control.
+
+Optional private read_path_aliases map historical paths to canonical paths within the same authorized root. Matching follows Windows case-insensitive path semantics and whole folder segments. Targets receive the same path/link checks, alias chains are not followed, and writes through historical paths are denied. This preserves old citations after a separately reviewed relocation; upgrading source alone does not relocate existing notes or generate aliases.
 
 Each project has PROJECT.md (stable UUID/display name), INDEX.md and separate Sources/Knowledge/History. Restricted YAML frontmatter uses JSON-encoded values; source bodies preserve decoded text/CRLF. Knowledge holds type/topic/key/value, status/epistemic/uncertainty, source IDs and exact quote/character ranges. LAYOUT.md selects the default/shared IDs. Inbox candidates are unassigned review material; redirects preserve legacy citation paths.
 

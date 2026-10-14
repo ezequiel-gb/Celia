@@ -24,7 +24,7 @@ jobs:
           python package.py --check-tracked --check-history 1181f82fd6df5802cf5cc4317dd35ce3f42799b0
           python package.py --verify --check-tracked
           python test_package.py
-      - name: Real disposable fresh install and pinned public-baseline upgrade
+      - name: Real disposable fresh install and pinned v0.2/v0.3 upgrades
         run: python test_installation.py
       - name: File policy and real stdio MCP protocol
         run: .\service\.venv\Scripts\python.exe service/test_service.py

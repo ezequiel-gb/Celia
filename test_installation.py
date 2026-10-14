@@ -1,4 +1,4 @@
-"""Real disposable installers and upgrade from the pinned public v0.2 baseline."""
+"""Real disposable fresh installers and upgrades from pinned v0.2/v0.3 source."""
 import argparse
 import asyncio
 import hashlib
@@ -12,11 +12,35 @@ import zipfile
 
 BASE=Path(__file__).resolve().parent
 PUBLIC_BASELINE='1181f82fd6df5802cf5cc4317dd35ce3f42799b0'
+MEMORY_BASELINE='a1cb1890cc0ee93c46dd979d2c79a44ccf9a141f'
 
 def run(*args):
     subprocess.run([str(a) for a in args],check=True)
 
-async def probe(service, initialize, legacy, count, cli=False):
+async def seed_v03(service, manifest):
+    sys.path.insert(0,str(service))
+    from mcp import Client
+    from mcp.client.stdio import StdioServerParameters
+    from engine import Files
+    from second_brain import Brain,digest
+    async with Client(StdioServerParameters(command=sys.executable,args=[str(service/'server.py')])) as client:
+        assert len((await client.list_tools()).tools)==19
+        def unpack(result):
+            assert not result.is_error,str(result)
+            return json.loads(next(c.text for c in result.content if getattr(c,'type',None)=='text'))
+        text='User: Preserve existing memory.\r\n'
+        claims=[dict(type='requirement',title='Existing memory',topic='Upgrade',key='preserve',value='memory',
+                     evidence='Preserve existing memory.',epistemic='accepted',uncertainty='Synthetic v0.3 fixture')]
+        plan=unpack(await client.call_tool('memory_archive_preview',dict(title='Existing v0.3 source',text=text,
+                    source_ref='synthetic v0.3 fixture',completeness='excerpt',claims_json=json.dumps(claims))))
+        unpack(await client.call_tool('memory_commit',dict(plan_id=plan['plan_id'],approved_sha256=plan['plan_sha256'])))
+        assert not unpack(await client.call_tool('memory_inspect',{}))['issues']
+    config=json.loads((service/'config.json').read_text())
+    brain=Brain(Files(config,service/'.runtime'),prefix=config['second_brain']['path'])
+    manifest.write_text(json.dumps({r['meta']['id']:digest(brain.path(r['path']).read_bytes()) for r in brain.records()}))
+    brain.path('WORKFLOW.md').write_bytes(b'# Existing workflow\r\nPreserve this.\r\n')
+
+async def probe(service, initialize, legacy, count, cli=False, expected_records=None):
     sys.path.insert(0,str(service))
     from mcp import Client
     from mcp.client.stdio import StdioServerParameters
@@ -27,7 +51,7 @@ async def probe(service, initialize, legacy, count, cli=False):
     files=Files(config,service/'.runtime')
     memory=config.get('second_brain',dict(path='Archives'))
     prefix=Path(config['roots']['Projects']['path'])/memory['path']
-    original={}
+    original=json.loads(expected_records.read_text()) if expected_records else {}
     if legacy:
         old=Brain(files,prefix=memory['path'])
         evidence='User: Use portable Markdown.\r\n'
@@ -57,11 +81,11 @@ async def probe(service, initialize, legacy, count, cli=False):
             inspected=unpack(await client.call_tool('memory_inspect',{}))
             assert not inspected['issues'] and inspected['layout']=='project-v4'
             assert (prefix/'WORKFLOW.md').is_file()
-            if legacy:
+            if legacy or expected_records:
                 brain=ProjectBrain(files,prefix=memory['path'])
                 assert {r['meta']['id']:digest(brain.path(r['path']).read_bytes()) for r in brain.records()}==original
                 assert (prefix/'WORKFLOW.md').read_bytes()==b'# Existing workflow\r\nPreserve this.\r\n'
-                hits=unpack(await client.call_tool('memory_search',dict(query='portable Markdown')))['hits']
+                hits=unpack(await client.call_tool('memory_search',dict(query='memory' if expected_records else 'portable Markdown')))['hits']
                 assert hits and hits[0]['provenance_valid']
             else: assert inspected['notes']==0
         assert not (await client.call_tool('read_document',dict(root='Vault',path='INDEX.md'))).is_error
@@ -74,9 +98,13 @@ def main():
     parser.add_argument('--legacy',action='store_true')
     parser.add_argument('--count',type=int,default=27)
     parser.add_argument('--cli',action='store_true')
+    parser.add_argument('--seed-v03',type=Path)
+    parser.add_argument('--expected-records',type=Path)
     args=parser.parse_args()
     if args.probe:
-        asyncio.run(probe(args.probe,args.initialize,args.legacy,args.count,args.cli));return
+        if args.seed_v03:
+            asyncio.run(seed_v03(args.probe,args.seed_v03));return
+        asyncio.run(probe(args.probe,args.initialize,args.legacy,args.count,args.cli,args.expected_records));return
     from package import FILES
     with tempfile.TemporaryDirectory(prefix='celious release acceptance ') as tmp:
         workspace=Path(tmp)
@@ -139,5 +167,25 @@ def main():
         run(old_python,'-m','pip','check')
         run(old_python,BASE/'test_installation.py','--probe',legacy/'service','--initialize','--legacy')
         print('Real fresh install, opt-in/off 27/14 tools, public v0.2 source upgrade, preserved config/profile/files, verified overlay checkpoint, legacy byte migration and workflow preservation passed.',flush=True)
+        v03=workspace/'v0.3 existing custom memory';v03.mkdir()
+        archive=workspace/'memory-baseline.zip'
+        run('git','-c','safe.directory='+BASE.as_posix(),'-C',BASE,'archive','--format=zip','--output',archive,MEMORY_BASELINE)
+        with zipfile.ZipFile(archive) as bundle:bundle.extractall(v03)
+        run(sys.executable,v03/'setup.py','--tunnel-id','tunnel_'+'0'*32)
+        v03_python=v03/'service/.venv/Scripts/python.exe'
+        config_path=v03/'service/config.json'
+        config=json.loads(config_path.read_text());config['second_brain']=dict(root='Projects',path='Legacy Memory')
+        config_path.write_text(json.dumps(config))
+        original_config=config_path.read_bytes()
+        profile=v03/'service/.runtime/profiles/celious.yaml';profile_bytes=profile.read_bytes()
+        manifest=workspace/'v03-original-records.json'
+        run(v03_python,BASE/'test_installation.py','--probe',v03/'service','--seed-v03',manifest)
+        run(sys.executable,BASE/'upgrade.py','--installation',v03,'--backup-dir',workspace/'v03 private backups',
+            '--enable-memory','--apply','--connection-off')
+        assert config_path.read_bytes()==original_config and profile.read_bytes()==profile_bytes
+        run(v03_python,'-m','pip','check')
+        run(v03_python,BASE/'test_installation.py','--probe',v03/'service','--initialize','--cli','--expected-records',manifest)
+        assert not (Path(config['roots']['Projects']['path'])/'Archives').exists()
+        print('Pinned v0.3 19-tool archive -> source overlay -> OFF CLI migration -> 27-tool retrieval passed; custom prefix, config/profile, CRLF workflow and exact source/knowledge bytes preserved.',flush=True)
 
 if __name__=='__main__':main()

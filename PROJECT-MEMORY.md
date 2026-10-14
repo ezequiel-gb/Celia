@@ -86,7 +86,7 @@ Next change directory to the EXISTING installation, run its Python `-m pip check
 
 Migration uses journaled copy-and-redirect writes. Original source/knowledge/history files are preserved byte-for-byte in the selected project. Old paths become navigation-only redirects, excluded from knowledge scanning; they preserve previous citations/wiki links without duplicating facts. The layout marker activates last. Incomplete transactions block cooperating readers until recovery. Old-layout proposals remain private evidence but cannot be replayed.
 
-Memory disabled exposes the original 14 tools. Enabled v0.4 exposes **27 tools: 14 file tools and 13 memory endpoints**. No separate tunnel is created. Existing configured memory paths/layouts remain compatible; do not move them by hand. For this installation the owner-selected archive home is Archives, and memory_projects reports the authoritative archive_root.
+Memory disabled exposes the original 14 tools. Enabled v0.4 exposes **27 tools: 14 file tools and 13 memory endpoints**. No separate tunnel is created. Fresh installations use Archives with project folders directly inside it. Existing configured memory paths/layouts remain compatible; do not move them by hand. memory_projects reports the authoritative archive_root. A source upgrade preserves the configured location rather than silently relocating existing records.
 
 ## Retrieval
 
