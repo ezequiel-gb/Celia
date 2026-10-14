@@ -22,5 +22,7 @@ jobs:
         run: .\service\.venv\Scripts\python.exe service/test_second_brain.py
       - name: Memory MCP and cross-session retrieval
         run: .\service\.venv\Scripts\python.exe service/test_memory_protocol.py
+      - name: Project memory, supervised review and migration
+        run: .\service\.venv\Scripts\python.exe service/test_project_memory.py
       - name: Hidden Windows process tree shuts down
         run: .\service\.venv\Scripts\python.exe service/tray.py --self-test

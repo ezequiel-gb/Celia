@@ -443,11 +443,27 @@ def main():
     search.add_argument('--type', dest='note_type')
     search.add_argument('--status', default='active')
     search.add_argument('--limit', type=int, default=8)
+    search.add_argument('--project-id')
+    search.add_argument('--cross-project', action='store_true')
+    search.add_argument('--no-shared', action='store_true')
     sub.add_parser('inspect')
     sub.add_parser('recover')
+    sub.add_parser('projects')
+    sub.add_parser('inbox')
+    sub.add_parser('plan-rebuild')
+    migration = sub.add_parser('plan-migrate')
+    migration.add_argument('--name', default='Celious')
+    project = sub.add_parser('plan-project')
+    project.add_argument('name')
+    identify = sub.add_parser('identify')
+    identify.add_argument('input', type=Path)
+    identify.add_argument('--project-id')
+    reject = sub.add_parser('reject')
+    reject.add_argument('proposal_id')
     args = parser.parse_args()
     config = json.loads(args.config.read_text('utf-8-sig')) if args.config else None
-    brain = Brain(Files(config, args.runtime), args.root, args.prefix)
+    from project_memory import ProjectBrain
+    brain = ProjectBrain(Files(config, args.runtime), args.root, args.prefix)
     if args.command == 'plan-archive':
         result = brain.plan_archive(**json.loads(args.input.read_text('utf-8')))
     elif args.command == 'commit':
@@ -455,7 +471,18 @@ def main():
     elif args.command == 'plan-supersede':
         result = brain.plan_supersede(args.old_id, args.new_id, args.reason)
     elif args.command == 'search':
-        result = brain.search(args.query, args.topic, args.note_type, args.status or None, args.limit)
+        result = brain.search(args.query, args.topic, args.note_type, args.status or None, args.limit,
+                              project_id=args.project_id, include_shared=not args.no_shared, cross_project=args.cross_project)
+    elif args.command == 'plan-migrate':
+        result = brain.plan_migrate(args.name)
+    elif args.command == 'plan-project':
+        result = brain.plan_project(args.name)
+    elif args.command == 'plan-rebuild':
+        result = brain.plan_rebuild()
+    elif args.command == 'identify':
+        result = brain.identify(args.input.read_bytes().decode('utf-8'), args.project_id)
+    elif args.command == 'reject':
+        result = brain.reject(args.proposal_id)
     else:
         result = getattr(brain, args.command)()
     print(json.dumps(result, ensure_ascii=False, indent=2))

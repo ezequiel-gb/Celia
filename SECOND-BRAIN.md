@@ -1,5 +1,7 @@
 # Celious Second Brain
 
+**Current version: v0.4.0.** Use [Project memory: upgrade, routing, migration and supervised workflows](PROJECT-MEMORY.md) for current behavior and the 27-tool schema. The v0.3.0 guide below is retained as baseline architecture/reference; its global collection paths and 19-tool deployment instructions are superseded by the current project guide.
+
 Celious can archive supplied conversation text, keep evidence separate from reusable claims, retrieve cited context, and supersede decisions without losing their history. This extension makes no network or model calls and starts no worker. ChatGPT provides the reasoning and proposed extraction; local code checks evidence, paths and conflicts.
 
 ## Storage and architecture

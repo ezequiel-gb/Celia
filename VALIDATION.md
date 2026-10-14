@@ -32,3 +32,9 @@ Memory checks cover exact source/CRLF fidelity, evidence quotes, completeness, d
 
 Deployment-specific live connector, account refresh, backup and application checks belong in a private installation report. The prior GitHub workflow results below describe v0.2.0; a v0.3.0 CI run is not claimed. Actual Obsidian navigation and a separate ChatGPT chat require environment-specific acceptance; a second MCP-session test does not establish those by itself.
 
+# Project memory v0.4.0 — local isolated verification
+
+The original 13 memory, 9 file-policy and 4 tray tests remain the regression baseline. The new 17-test project suite covers project spaces/identities, A/B/shared/cross retrieval, correct archive routing, review queue/resolve/reject, duplicate/conflict scope, supersession/history, provisional evidence, index rebuild, exact/stale plans, unrelated destination files, failed operations, hard interruption recovery, legacy byte preservation, isolated restoration to v0.3.0 and competing commit processes. A private verified-baseline migration case runs locally when available and explicitly skips in public environments without that private fixture.
+
+The isolated stdio test advertises 27 tools and exercises all 13 memory endpoints, including supersede preview and rejection. A fresh second process retrieves persisted project data. The original 14-tool stdio workflow and real hidden parent/child shutdown remain tested separately. These checks use disposable roots and no real key or tunnel. Production migration/account refresh and model-selected proactive behavior belong in the private deployment report; unit tests alone do not prove universal tool invocation. No new GitHub workflow run/publication is claimed.
+

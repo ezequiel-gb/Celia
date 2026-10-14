@@ -6,13 +6,13 @@ import zipfile
 
 BASE = Path(__file__).resolve().parent
 FILES = ['README.md', 'TROUBLESHOOTING.md', 'SECURITY.md', 'PUBLISHING.md', 'VALIDATION.md',
-         'INSTALLATION-A-TO-Z.md', 'PROJECT-EXPLAINED.md', 'SECOND-BRAIN.md',
+         'INSTALLATION-A-TO-Z.md', 'PROJECT-EXPLAINED.md', 'SECOND-BRAIN.md', 'PROJECT-MEMORY.md',
          '.gitignore', '.github/workflows/windows.yml', 'setup.py', 'package.py',
          'Install.cmd', 'Start-Celious.cmd']
 FILES += ['service/' + name for name in ['engine.py', 'server.py', 'connect.py', 'tray_core.py',
           'tray.py', 'install_tray.py', 'review.py', 'test_service.py', 'test_tray.py',
           'requirements.txt', 'requirements.lock.txt', 'config.example.json',
-          'second_brain.py', 'memory_tools.py', 'test_second_brain.py', 'test_memory_protocol.py']]
+          'second_brain.py', 'project_memory.py', 'memory_tools.py', 'test_second_brain.py', 'test_project_memory.py', 'test_memory_protocol.py']]
 FILES += ['assets/celious-' + state + '.ico' for state in ['on', 'off', 'starting', 'error']]
 
 
