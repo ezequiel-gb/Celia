@@ -18,7 +18,7 @@ The corpus is scanned on demand, with a 5,000-note and 1 MB per-note bound. Ther
 
 ## Enable on an existing installation
 
-Make and verify a complete private backup first. Stop the tray connection before replacing server code. Copy `second_brain.py` and `memory_tools.py` beside `engine.py`, use this version of `server.py`, and add this optional object to the existing private `service/config.json`:
+Make and verify a complete private backup first. Stop the tray connection before replacing server code. Copy `second_brain.py` and `memory_tools.py` beside `engine.py`, use this version of `server.py` and the v0.3.0 `engine.py` absence-conflict check, and add this optional object to the existing private `service/config.json`:
 
 ```json
 "second_brain": {"root": "Projects", "path": "Celious/Second Brain"}

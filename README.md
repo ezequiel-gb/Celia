@@ -2,7 +2,7 @@
 
 Celious is our independent Windows implementation, inspired by the original Celia project. References to Celia in original materials and to components such as Celia Core describe that original project, not a claim that those components are installed here.
 
-Celious Files connects ChatGPT to selected local folders through an MCP file server and an outbound OpenAI Secure MCP Tunnel. A Windows tray switch starts and stops the connection without a terminal. Source release: 0.2.0.
+Celious Files connects ChatGPT to selected local folders through an MCP file server and an outbound OpenAI Secure MCP Tunnel. A Windows tray switch starts and stops the connection without a terminal. Source release: 0.3.0.
 
 ## Second Brain extension
 
