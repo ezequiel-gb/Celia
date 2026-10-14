@@ -128,7 +128,8 @@ class Files:
             if not p.parent.is_dir():
                 raise ValueError('Create the parent folder first')
             current = self.fingerprint(p)
-            if expected_sha256 is not None and current != expected_sha256:
+            # An empty digest explicitly requires an absent destination.
+            if expected_sha256 is not None and current != (None if expected_sha256 == '' else expected_sha256):
                 raise ValueError('File changed; read again before writing')
             backup = self._backup(p, root, relative, 'write') if p.exists() else None
             self.audit('write', root, relative, status='begin', request_id=backup or '')

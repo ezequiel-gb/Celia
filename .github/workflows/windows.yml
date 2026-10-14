@@ -18,5 +18,9 @@ jobs:
         run: .\service\.venv\Scripts\python.exe service/test_service.py
       - name: Tray lifecycle
         run: .\service\.venv\Scripts\python.exe service/test_tray.py
+      - name: Second Brain isolated acceptance
+        run: .\service\.venv\Scripts\python.exe service/test_second_brain.py
+      - name: Memory MCP and cross-session retrieval
+        run: .\service\.venv\Scripts\python.exe service/test_memory_protocol.py
       - name: Hidden Windows process tree shuts down
         run: .\service\.venv\Scripts\python.exe service/tray.py --self-test

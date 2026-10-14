@@ -4,6 +4,10 @@ Celious is our independent Windows implementation, inspired by the original Celi
 
 Celious Files connects ChatGPT to selected local folders through an MCP file server and an outbound OpenAI Secure MCP Tunnel. A Windows tray switch starts and stops the connection without a terminal. Source release: 0.2.0.
 
+## Second Brain extension
+
+Version 0.3.0 adds an opt-in Markdown memory extension: evidence-backed archiving, contextual retrieval, duplicate/conflict review, decision history and transactional recovery. [Second Brain setup, workflow and limits](SECOND-BRAIN.md). Existing configurations retain the original 14 tools; enabling memory exposes five additional tools on the same service and tunnel. No model API calls or background workers are added.
+
 ## Does Celious Files cost anything?
 
 **Celious Files itself has no download, installation or subscription fee. It makes no paid AI model API calls. Purchasing API credits is not a step in this setup.** You use your own Windows computer and existing internet connection.
