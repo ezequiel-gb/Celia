@@ -2,7 +2,7 @@
 
 ## Current v0.4 release candidate
 
-The readiness correction adds explicit memory opt-in (no silent initialization), reviewed public-baseline source upgrade, conditional WORKFLOW creation, package manifest/privacy/integrity checks and real disposable installer coverage. Local acceptance results for this candidate are recorded below; GitHub execution remains pending until an approved development-branch push. The older clean-install/runner evidence is labelled historical.
+The readiness correction adds explicit memory opt-in (no silent initialization), reviewed public-baseline source upgrade, conditional WORKFLOW creation, package manifest/privacy/integrity checks and real disposable installer coverage. Local acceptance and fresh hosted results are recorded below. The older v0.2 clean-install/runner evidence is labelled historical.
 
 Local Windows x64 / Python 3.12.14 acceptance on 13 October 2026 passed:
 
@@ -13,7 +13,13 @@ Local Windows x64 / Python 3.12.14 acceptance on 13 October 2026 passed:
 - Package checks validate exact allowlisted membership, source bytes, per-file manifest, ZIP CRC and SHA-256; privacy fixtures and a tampered ZIP are rejected. An interrupted source overlay restores originals and preserves added files; dependency-lock comparison tolerates line-ending differences.
 - Python syntax and local documentation file links passed. Source/history privacy checks are repeated at the final commit/package boundary; the package checksum belongs in its generated SHA256SUMS.txt, avoiding a self-referential documentation hash.
 
-The Windows workflow includes dependency verification, package and unpublished-history checks, real fresh-install/public-baseline upgrade coverage and all suites, with a 30-minute limit. **No v0.4 GitHub-hosted run has occurred yet.** Registry/download availability, hosted runner behavior and runtime duration must pass after an approved development-branch push. Public CI intentionally skips the private baseline and never receives private notes/backups. Real ChatGPT access, model-selected proactive invocation, interactive shortcuts on another computer and Obsidian remain environment-specific checks.
+The Windows workflow includes dependency verification, package and unpublished-history checks, real fresh-install/public-baseline upgrade coverage and all suites, with a 30-minute limit. Public CI intentionally skips the private baseline and never receives private notes/backups. Real ChatGPT access, model-selected proactive invocation, interactive shortcuts on another computer and Obsidian remain environment-specific checks.
+
+### Fresh hosted Windows v0.4 verification
+
+[Windows run 38466885605](https://github.com/ezequiel-gb/Celious/actions/runs/38466885605) passed on development commit `6110037c7813afeb5b558d9163a536dcc3b49395`. Every test step succeeded: dependency installation/check, 41-file package/manifest/privacy and five subsequent commit-tree scans, real disposable fresh installation/public-v0.2 upgrade, file/tray/memory/MCP suites and hidden process shutdown. Logs confirm 45 passing public-fixture unit cases and one expected private-baseline skip, with repeated suites inside the disposable installation scenario. No real credential or production data was used.
+
+This proves the hosted recipe for that exact source commit, not a general account-access guarantee. Subsequent documentation/source commits and the PR merge ref must pass their own workflow before promotion. Main remains the prior public version until the owner explicitly approves merge; no v0.4 tag/release is implied by a passing development run.
 
 ## Historical v0.2 clean installation
 
