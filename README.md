@@ -8,6 +8,8 @@ Celious Files connects ChatGPT to selected local folders through an MCP file ser
 
 Version 0.4.0 adds physical project collections, stable project identities, explicit project/shared/cross-project retrieval, supervised Inbox routing and quote-backed candidate identification. It preserves v0.3.0 evidence, decision history and recovery. [Project memory setup, migration and limits](PROJECT-MEMORY.md). Existing configurations without memory retain the original 14 tools; enabled memory exposes 13 endpoints (27 tools total) on the same service/tunnel. Identification depends on model/tool invocation; no continuous monitor, paid model API calls or background workers are added.
 
+Fresh setup: use setup.py --second-brain, then separately review and commit initialization. Existing public v0.2/private v0.3 installations: use the reviewed upgrade.py overlay from a separate source folder, with a verified full backup and actual connection OFF; the engine update is included. [Complete commands and sequencing](PROJECT-MEMORY.md#fresh-installation-and-reviewed-initialization). The public source does not include private notes, reports or the optional private GUI snapshot builder. A licence choice remains pending owner approval; no licence has been silently selected.
+
 ## Does Celious Files cost anything?
 
 **Celious Files itself has no download, installation or subscription fee. It makes no paid AI model API calls. Purchasing API credits is not a step in this setup.** You use your own Windows computer and existing internet connection.

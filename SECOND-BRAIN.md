@@ -1,6 +1,6 @@
 # Celious Second Brain
 
-**Current version: v0.4.0.** Use [Project memory: upgrade, routing, migration and supervised workflows](PROJECT-MEMORY.md) for current behavior and the 27-tool schema. The v0.3.0 guide below is retained as baseline architecture/reference; its global collection paths and 19-tool deployment instructions are superseded by the current project guide.
+**Current version: v0.4.0.** Use [Project memory: fresh setup, upgrades and reviewed initialization](PROJECT-MEMORY.md) for the complete procedure and 27-tool schema. Historical v0.3 source remains in Git; current instructions below apply to v0.4.
 
 Celious can archive supplied conversation text, keep evidence separate from reusable claims, retrieve cited context, and supersede decisions without losing their history. This extension makes no network or model calls and starts no worker. ChatGPT provides the reasoning and proposed extraction; local code checks evidence, paths and conflicts.
 
@@ -8,9 +8,9 @@ Celious can archive supplied conversation text, keep evidence separate from reus
 
 The default memory path is `Celious/Second Brain` within the already authorised Projects root. No new root is granted. Code remains in `service/`; private plans, transaction journals and locks remain in `service/.runtime/second-brain/`. Notes are Markdown:
 
-- `Sources/src-<uuid>.md`: exact accessible source text, source reference, SHA-256 and completeness.
-- `Knowledge/note-<uuid>.md`: one reusable fact, decision, requirement, preference, lesson, question or interpretation; stable identity, timestamps, topic/key/value, epistemic status, uncertainty, exact quote and character offsets, links and source identities.
-- `History/<note-id>/<version-id>.md`: former Markdown versions created during supersession.
+- `Projects/<project>/Sources/src-<uuid>.md`: exact accessible source text, source reference, SHA-256 and completeness.
+- `Projects/<project>/Knowledge/note-<uuid>.md`: one reusable fact, decision, requirement, preference, lesson, question or interpretation; stable identity, timestamps, topic/key/value, epistemic status, uncertainty, exact quote and character offsets, links and source identities.
+- `Projects/<project>/History/<note-id>/<version-id>.md`: former Markdown versions created during supersession. Shared Knowledge has separate collections; Inbox holds unassigned candidates.
 - `INDEX.md`: rebuildable Markdown catalog with links and claim summaries.
 - `WORKFLOW.md`: local usage and new-chat instructions.
 
@@ -20,25 +20,25 @@ The corpus is scanned on demand, with a 5,000-note and 1 MB per-note bound. Ther
 
 ## Enable on an existing installation
 
-Make and verify a complete private backup first. Stop the tray connection before replacing server code. Copy `second_brain.py` and `memory_tools.py` beside `engine.py`, use this version of `server.py` and the v0.3.0 `engine.py` absence-conflict check, and add this optional object to the existing private `service/config.json`:
+Follow the complete verified-backup/upgrade procedure in PROJECT-MEMORY.md. The reviewed upgrade.py helper overlays all five required modules, including engine.py and project_memory.py. Never use the old two-file copy recipe or replace private config with a public example. Memory opt-in adds only this optional object:
 
 ```json
 "second_brain": {"root": "Projects", "path": "Celious/Second Brain"}
 ```
 
-Keep all existing roots, permissions, tunnel identity and credential behavior unchanged. Restart through Celious Switch, then refresh the custom MCP connection's tool discovery if the client still advertises the original 14 tools. With the object absent, the original 14-tool schema is preserved; enabled installations advertise 19 tools. This opt-in extension does not replace the tray, connector, installer or runtime environment.
+Keep all existing roots, permissions, tunnel identity and credential behavior. Review/commit initialization or migration with the local CLI while OFF, or restart/refresh FIRST for the MCP alternative. With the object absent, the original 14 tools remain; enabled installations advertise 27 tools. Setup --second-brain enables tools without silently initializing. Migration creates WORKFLOW.md only if missing.
 
-The existing `search_files`, `read_document` and write/edit tools can already access these notes. For immediate retrieval, list roots, read Projects `Celious/Second Brain/INDEX.md`, search the Knowledge folder with content=true, read relevant notes and their linked Sources with pagination, and cite their paths. Read status/epistemic/uncertainty fields; do not treat superseded or pending claims as accepted current knowledge. Raw file operations bypass the memory transaction coordinator; prefer the memory tools for multi-note updates.
+Existing file tools can access notes. List roots, read Projects `Celious/Second Brain/INDEX.md`, then the selected project's index/Knowledge and linked Sources. Prefer memory_projects and scoped memory_search. Pending/superseded claims are not accepted current knowledge. Raw file operations bypass the memory transaction coordinator; prefer memory tools for multi-note updates.
 
 ## Archive to Celious
 
 1. Obtain actually accessible text from the active chat, an export or explicitly supplied material. Mark `partial`, `excerpt`, `user_supplied`, or `complete_export`. Only use the last label for an actual complete export; do not infer completeness from a title or summary.
 2. Extract useful claims with the reasoning client. Each claim has string fields `type`, `title`, `topic`, `key`, `value`, `evidence`, `epistemic`, `uncertainty`, and optional `links` containing existing stable identities. Evidence must be an exact substring. Reasoning/human review still determines whether the quote supports the interpretation; substring matching alone cannot prove semantic truth.
-3. Call `memory_archive_preview(title, text, source_ref, completeness, claims_json)`. Inspect all proposed contents, warnings and expected hashes. Nothing is yet saved to the note collection.
+3. Obtain the intended project_id with memory_projects and call `memory_archive_preview(title, text, source_ref, completeness, claims_json, project_id)`. Inspect all proposed contents, warnings and expected hashes. Explicit-project preview does not yet save accepted notes. Missing routing instead writes an unassigned Inbox review candidate; resolve/reject it explicitly.
 4. When owner authorization covers the proposed retention, call `memory_commit(plan_id, approved_sha256)` with the exact returned digest. Otherwise request approval of that concrete plan. Stale or altered plans fail.
 5. Call `memory_inspect` and retrieve a saved note to verify provenance.
 
-An exact source duplicate is refused. A duplicate claim with the same normalized topic/key/value is skipped while retaining the new source; its initial provenance is preserved rather than silently rewritten. A different value for the same topic/key is saved as pending review, leaving the accepted claim active. Topic/key normalization is case/whitespace based; synonymous wording and semantic contradictions need reasoning review. Use consistent keys.
+An exact source duplicate in the same project is refused. A duplicate claim with the same project/topic/key/value is skipped while retaining the new source; its initial provenance is preserved rather than silently rewritten. A different active value becomes pending review, leaving accepted knowledge intact. Unrelated projects are compared separately. Topic/key normalization is case/whitespace based; synonymous wording and semantic contradictions need reasoning review.
 
 ## Updates and recovery
 

@@ -274,6 +274,17 @@ class ProjectBrain(LegacyBrain):
                 migrated.append(dict(r, path=p['path']+'/'+r['path'], project_id=p['id'], project_name=p['name'], project_kind='project'))
             changes += self.index_changes(migrated, [p, shared])
             changes.append(self.change('Inbox/INDEX.md', self.inbox_catalog([])))
+            if not self.path('WORKFLOW.md').exists():
+                changes.append(self.change('WORKFLOW.md', '# Second Brain workflow\n\n'
+                    'Select a stable project ID with memory_projects. Retrieve scoped memory before work; '
+                    'cross-project retrieval must be explicit. Cite source evidence, status and uncertainty.\n\n'
+                    'Use memory_identify on accessible text for tentative read-only candidates. Review '
+                    'project routing, exact quotes and completeness before memory_archive_preview. '
+                    'Missing routing enters Inbox, not accepted knowledge. Review all changes and '
+                    'commit only the exact digest with owner authorization. Never silently archive.\n\n'
+                    'Inspect after commits. Review supersession separately; History preserves prior '
+                    'versions. Read the installed PROJECT-MEMORY.md for limits and recovery. '
+                    'There is no continuous chat monitor or guaranteed automatic tool invocation.\n'))
             # Activate the new layout last. Recovery blocks readers during partial writes.
             changes.append(self.change('LAYOUT.md', render(dict(version=4, default_project_id=p['id'], shared_project_id=shared['id']),
                                                           '# Project-based memory layout\n')))

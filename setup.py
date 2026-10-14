@@ -53,6 +53,7 @@ def main():
     parser.add_argument('--shortcuts', action='store_true', help='Install Desktop and local tray shortcuts')
     parser.add_argument('--startup', action='store_true', help='Also start the tray OFF at Windows login')
     parser.add_argument('--replace-config', action='store_true', help='Explicitly replace an existing local configuration')
+    parser.add_argument('--second-brain', action='store_true', help='Enable memory tools; initialization still requires a reviewed plan')
     args = parser.parse_args()
     if os.name != 'nt' or struct.calcsize('P') != 8 or sys.version_info < (3, 12):
         parser.error('Use 64-bit Python 3.12 or later on Windows; Python 3.12 is the tested version')
@@ -91,6 +92,7 @@ def main():
         print('Creating isolated virtual environment ...', flush=True)
         venv.EnvBuilder(with_pip=True, system_site_packages=False).create(python.parents[1])
     run(python, '-m', 'pip', 'install', '-r', BASE / 'service' / 'requirements.lock.txt')
+    run(python, '-m', 'pip', 'check')
     download_client()
     config = {
         'tunnel_id': tunnel, 'plugin_url': args.plugin_url,
@@ -98,6 +100,8 @@ def main():
         'roots': {'Vault': {'path': vault.as_posix(), 'writable': True},
                   'Projects': {'path': projects.as_posix(), 'writable': True}},
     }
+    if args.second_brain:
+        config['second_brain'] = {'root': 'Projects', 'path': 'Celious/Second Brain'}
     # Validate filesystem boundaries using the same policy as the server before saving.
     sys.path.insert(0, str(BASE / 'service'))
     from engine import Files

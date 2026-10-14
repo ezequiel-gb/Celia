@@ -5,15 +5,27 @@ permissions:
 jobs:
   test:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           architecture: x64
       - name: Install without credentials or shortcuts
         run: python setup.py --tunnel-id tunnel_00000000000000000000000000000000
+      - name: Verify locked dependencies
+        run: .\service\.venv\Scripts\python.exe -m pip check
+      - name: Public package privacy, membership, manifest and checksum
+        run: |
+          python package.py --check-tracked --check-history 1181f82fd6df5802cf5cc4317dd35ce3f42799b0
+          python package.py --verify --check-tracked
+          python test_package.py
+      - name: Real disposable fresh install and pinned public-baseline upgrade
+        run: python test_installation.py
       - name: File policy and real stdio MCP protocol
         run: .\service\.venv\Scripts\python.exe service/test_service.py
       - name: Tray lifecycle

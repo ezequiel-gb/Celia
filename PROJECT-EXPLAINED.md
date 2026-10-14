@@ -18,7 +18,7 @@ A Markdown vault adds durable context. Project notes, decisions and next actions
 | Celious Files plugin | Present the server's tools in a conversation | ChatGPT plugin configuration |
 | Secure MCP Tunnel | Transport requests between OpenAI and the local client | OpenAI tunnel plus local client |
 | tunnel-client | Run the private connection and invoke the MCP server | Windows background process |
-| Celious MCP server | Expose the 14 tools and enforce file policy | Local Python process |
+| Celious MCP server | Expose 14 file tools, plus 13 opt-in memory tools, and enforce file policy | Local Python process |
 | Celious tray switch | Start, check and stop the local connection | Windows icon and small control panel |
 | Projects and Vault | Store the files you authorise | Selected local directories |
 
@@ -50,7 +50,7 @@ The tray controls availability. ON starts the local tunnel and server. Hiding th
 
 ## What this release can do
 
-The 14 tools cover root/directory listing, document reads, search, paginated binary reads, direct writes and text edits, folder creation, within-root moves, recoverable deletion/restoration and optional proposed changes. The exact implementation is in `service/server.py` and `service/engine.py`.
+The 14 filesystem tools cover listing, document/binary reads, search, direct writes/edits, folders, moves, recoverable deletion/restoration and proposals. v0.4 optionally adds 13 memory endpoints for separate project collections, cited retrieval, read-only candidates, Inbox review, exact authorized commits, supersession/history and recovery. Default setup keeps 14 tools; setup --second-brain enables 27 without silently initializing. Follow [PROJECT-MEMORY.md](PROJECT-MEMORY.md) for reviewed setup/upgrade/migration.
 
 The server extracts text from PDF, DOCX, ODT and XLSX files and reads ordinary text/code files. It does not provide OCR or rich-document layout editing. Binary writes must contain valid bytes for the intended format. File write/read limits and format behaviour are in README.md.
 
@@ -64,7 +64,7 @@ These are application checks, not a separate Windows sandbox or independently au
 
 ## How this relates to the wider Celious project
 
-This source release is the **file-access layer** plus a starter vault and a desktop connection switch. It does not contain Celia Core, Celia Engine, Miles, autonomous agent supervision, email processing, Git promotion workflows or the broader architecture described in reference material. Installing this package does not create those components or reproduce a nine-workspace deployment.
+This v0.4 source release contains the file-access layer, starter vault, desktop switch and opt-in project-aware Second Brain. It does not contain Celia Core, Celia Engine, Miles, autonomous agent supervision, email processing, Git promotion workflows or the broader architecture in reference material. There is no universal chat monitor or guaranteed proactive tool activation. Installing this package does not reproduce a nine-workspace deployment.
 
 Those capabilities would require their own implementation, configuration and validation. The file-access layer can provide a useful foundation without claiming that the full ecosystem has been delivered.
 

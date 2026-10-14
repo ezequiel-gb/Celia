@@ -2,6 +2,8 @@
 
 This guide takes a new operator from an unconfigured Windows computer to a tested ChatGPT connection. Read [PROJECT-EXPLAINED.md](PROJECT-EXPLAINED.md) first for the purpose, architecture and limits.
 
+Current source release: **v0.4.0**. The base installer intentionally enables 14 file tools. For a fresh 27-tool Second Brain use setup.py --second-brain, then review/commit initialization as documented in [PROJECT-MEMORY.md](PROJECT-MEMORY.md). That guide also gives the complete public-v0.2/private-v0.3 upgrade, including engine.py, and separate OFF-CLI versus ON-MCP migration sequences. Do not use --replace-config as a source-upgrade shortcut.
+
 All commands below are for **Command Prompt**, unless stated otherwise. Do not paste your API secret into commands, ChatGPT, screenshots, GitHub or these documents. The setup command needs a tunnel ID; the secret belongs only in Celious's masked input window.
 
 ## Costs, keys and ChatGPT Plus access
@@ -21,7 +23,7 @@ OpenAI documents [separate ChatGPT/API billing](https://help.openai.com/en/artic
 
 ### What we verified, concluded and could not establish
 
-Checked on **13 October 2026**. This describes the published Celious Files v0.2.0 path, not future integrations or another application using the same account.
+Account/cost evidence was checked on **13 October 2026** for the published v0.2.0 file/tunnel path. v0.4 retains that path and adds no model API usage. These observations are historical account evidence, not a new billing audit or a guarantee for another account.
 
 | Question | Finding and confidence |
 | --- | --- |
