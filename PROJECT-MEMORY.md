@@ -40,6 +40,8 @@ py -3.12 setup.py --tunnel-id YOUR_TUNNEL_ID --second-brain --shortcuts
 
 Use the actual tunnel ID, never a secret, and deliberate --projects/--vault options only if changing default folders. Setup verifies dependencies and adds `"second_brain": {"root": "Projects", "path": "Celious/Second Brain"}`. It does NOT initialize/migrate notes. Fresh initialization creates empty Celious/shared collections and WORKFLOW.md through a separately reviewed plan. Existing workflows are preserved.
 
+This is an alternative to the file-only installer, not a second setup run afterward. If you already configured 14-tool v0.4, extract another complete source copy into a separate folder and use the reviewed upgrade.py --enable-memory procedure below; it preserves the existing configuration. Do not use --replace-config simply to enable memory.
+
 **Local CLI sequence, with the actual connection OFF:** change directory to the configured installation and run:
 
 ```bat
@@ -87,6 +89,50 @@ Migration uses journaled copy-and-redirect writes. Original source/knowledge/his
 Memory disabled exposes the original 14 tools. Enabled v0.4 exposes **27 tools: 14 file tools and 13 memory endpoints**. No separate tunnel is created.
 
 ## Retrieval
+
+### Which installation path applies?
+
+| Starting point | What to do |
+| --- | --- |
+| Fresh v0.4 | Install with --second-brain, review empty initialization, inspect, turn ON/refresh and complete the first-use test below |
+| Public v0.2 | Verify full backup; use the separate-source upgrade.py overlay WITH the engine update; enable tools, review initialization/migration and verify unchanged existing files/profile |
+| Compatible v0.3 | Verify full backup; preserve the existing memory root/prefix and workflow; overlay the five modules, then review migration of legacy Sources/Knowledge/History |
+| Already initialized v0.4 | Do not rerun migration; inspect/retrieve and use ordinary project/archive workflows; any later source upgrade still needs backup/review |
+
+### First-use memory test
+
+Complete the file-operation test in INSTALLATION-A-TO-Z.md first. This test deliberately creates only synthetic material in a clearly named test project. Use a chat with Celious Files selected. Read-only checks do not save notes. Project/archive/supersession previews require review; commits actually write Markdown. ChatGPT may ask for its own confirmations.
+
+1. Ask: “Call memory_projects and memory_inspect. Show the layout version, project names/IDs and any issues.” Expect version 4, separate Celious and Shared Knowledge collections, no incomplete transactions. Fresh notes count is zero. If tools are missing, enable config and refresh; if layout is absent, use reviewed initialization above.
+2. Ask: “Prepare memory_project_preview for Installation Demo. Show what would be created; do not commit yet.” Review the new directory/descriptor/index and UUID. Then ask: “Commit that exact reviewed project plan.” Expect committed paths. List projects again and retain the returned demo ID; never guess it.
+3. Ask: “Use memory_identify read-only on this exact text: User: The Installation Demo requires portable Markdown. Use the demo project ID. Do not archive.” Expect tentative candidates and saved_to_memory=false. This explicit trigger is reliable; natural automatic selection is not guaranteed.
+4. Ask: “For Installation Demo, preview archiving the exact text User: The Installation Demo requires portable Markdown. Source reference: synthetic installation test; completeness: user_supplied. Extract one requirement with exact quote The Installation Demo requires portable Markdown., topic Installation Demo, key format, value Markdown, epistemic accepted, uncertainty Synthetic test requirement only. Show the full plan; do not commit.” Verify the project ID, source text/quote, paths, uncertainty and digest. Then explicitly authorize that exact reviewed commit.
+5. Ask: “Search portable Markdown in Installation Demo only; include_shared=false and cross_project=false. Cite the note, original source and quote.” Expect the synthetic active claim, valid provenance and demo project scope. Confirm the files in its Sources/Knowledge folders with File Explorer or paginated read_document. Other project context must not appear.
+6. Ask: “Search Installation Demo in the Celious project only with include_shared=false.” It must not retrieve the unrelated demo claim. Multiword lexical terms use OR matching, so unrelated existing matches are possible; judge project IDs/scope rather than expecting zero results in every existing corpus.
+7. Ask: “Search portable Markdown across projects explicitly, cross_project=true.” The demo may now appear and must be labelled by project. Shared retrieval is demonstrated by the automated synthetic suite; on a fresh installation shared space is empty until reviewed material is assigned there.
+8. Ask: “Prepare another demo archive proposal, then reject its plan with memory_reject; do not commit.” Expect rejection; previously accepted notes remain unchanged. Inspect/retrieve again. Do not test interruption or raw deletion against valuable notes.
+
+The synthetic demo records remain saved unless you separately approve their removal. There is no dedicated project-delete memory endpoint; do not remove just a descriptor or bypass coordinated relationships to clean up. Keep the demo clearly labelled or retain it only in a disposable installation. Never treat this synthetic requirement as real project policy.
+
+### Everyday prompts and operation states
+
+| Goal | Example prompt | State |
+| --- | --- | --- |
+| Project-only retrieval | “Retrieve the current deployment decisions in project X; exclude shared and unrelated projects; cite sources and uncertainty.” | Read-only |
+| Relevant shared context | “Retrieve relevant shared knowledge alongside project X. Label shared results separately.” | Read-only; include_shared=true |
+| Shared-only context | “Use the Shared Knowledge project ID as the scope and search the reviewed reusable guidance.” | Read-only |
+| Intentional broad search | “Search this topic across projects explicitly and label each result's project.” | Read-only; cross_project=true |
+| Identify useful information | “Review this accessible excerpt for potential memory in project X; do not save.” | Read-only candidates |
+| Archive | “Archive this supplied excerpt to project X. Show sources/claims, duplicates/conflicts and exact changes before saving.” | Preview, then separately authorized commit |
+| Uncertain project | “Queue this excerpt for project-assignment review; do not accept it as knowledge.” | Writes an Inbox candidate, not accepted knowledge |
+| Resolve Inbox | “List Inbox, then preview assigning candidate ID to project X; show comparisons before commit.” | Read-only list, reviewed resolution/commit |
+| Reject | “Reject proposal/candidate ID. Leave accepted knowledge unchanged.” | Writes review state |
+| Update decision | “Archive the supplied new evidence in the same project; flag conflict. Preview superseding old ID with the reviewed new ID and reason; retain history.” | Archive and supersession are separate reviewed commits |
+| Inspect evidence | “Run memory_inspect, then read the cited source with pagination and verify the quote and completeness.” | Read-only |
+
+### All memory endpoints
+
+Read-only: memory_projects, memory_search, memory_identify, memory_inspect, memory_inbox. Proposed changes: memory_project_preview, memory_migrate_preview, memory_supersede_preview, memory_inbox_resolve_preview, memory_rebuild_preview. memory_archive_preview proposes an explicit-project archive; omitted routing instead saves an Inbox candidate. memory_commit writes the exact reviewed plan; memory_reject writes rejection state. These 13 endpoints share the existing file policy/tunnel. A preview is not an accepted archive, and an Inbox save is not “nothing written.”
 
 Call memory_projects to obtain the actual stable project ID. Pass project_id to memory_search for the selected project. Legacy search calls transparently use the default project (Celious) plus Shared Knowledge; every result reports its scope. include_shared defaults true and labels shared hits. Set it false for project-only work. cross_project defaults false and must be enabled only for an explicit broader request.
 

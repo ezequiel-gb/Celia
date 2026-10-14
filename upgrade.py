@@ -11,7 +11,7 @@ import zipfile
 
 BASE = Path(__file__).resolve().parent
 MODULES = ['engine.py', 'server.py', 'second_brain.py', 'project_memory.py', 'memory_tools.py']
-GUIDES = ['README.md', 'PROJECT-MEMORY.md', 'SECOND-BRAIN.md', 'INSTALLATION-A-TO-Z.md',
+GUIDES = ['LICENSE', 'README.md', 'PROJECT-MEMORY.md', 'SECOND-BRAIN.md', 'INSTALLATION-A-TO-Z.md',
           'PROJECT-EXPLAINED.md', 'VALIDATION.md', 'SECURITY.md', 'PUBLISHING.md', 'TROUBLESHOOTING.md']
 
 def sha(data):

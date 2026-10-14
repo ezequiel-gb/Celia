@@ -164,6 +164,8 @@ If the required permission is absent, resolve it before connecting. Celious cann
 
 ## 7. Install the local software
 
+Choose ONE option before running setup. Options A/B create a file-only installation (14 tools). For the complete Second Brain installation, choose Option C instead. Do not run setup again over a configured installation to change its memory mode; use the reviewed existing-installation procedure in PROJECT-MEMORY.md.
+
 ### Option A: simplest installation with empty default folders
 
 Double-click **Install.cmd** inside the extracted folder. At `Your tunnel ID (not an API secret):`, paste your tunnel ID and press Enter. Do not enter the secret key here.
@@ -183,6 +185,16 @@ py -3.12 setup.py --projects "C:\CeliousData\Projects" --vault "C:\CeliousData\V
 Replace the example paths with user-writable folders on the installation's drive. Setup creates missing folders; it preserves existing vault starter files. Enter your tunnel ID when asked. Omit `--startup` if you do not want an icon at Windows login. Login startup starts the icon **OFF**, not an authenticated connection.
 
 You can instead supply `--tunnel-id YOUR_ACTUAL_TUNNEL_ID` on the command line. A tunnel ID is not the secret. An optional `--plugin-url` can be set later to your plugin's ChatGPT URL.
+
+### Option C: fresh filesystem plus Second Brain installation
+
+Open Command Prompt in the extracted folder as described in Option B. With default folders:
+
+```bat
+py -3.12 setup.py --second-brain --shortcuts
+```
+
+Enter only your tunnel ID when prompted. To use chosen folders, add the same --projects/--vault options as Option B; --startup remains optional. Expect dependency verification and Local installation ready. Memory tools are enabled, but no notes/layout are silently initialized. Keep the switch OFF and complete the reviewed local CLI initialization in PROJECT-MEMORY.md, or turn ON/connect/refresh first and use its MCP alternative. Continue sections 8–10 to enter the secret privately, install the ChatGPT connection and test file access; then complete the memory first-use test. A fresh --second-brain setup should expose 27 tools; a file-only setup exposes 14.
 
 ### If installation fails
 
@@ -238,6 +250,8 @@ Do not test deletion with existing valuable files. Recovery data is not the Wind
 
 ## 11. Verify and record your installation
 
+For Second Brain, now follow [reviewed initialization and the complete first-use memory test](PROJECT-MEMORY.md#first-use-memory-test). Confirm 27 tools when enabled, actual project UUIDs, version 4, clean inspection, a reviewed synthetic project/archive and cited retrieval. The filesystem test above remains necessary; a successful memory search alone does not validate editing, recovery or OFF/ON behavior. These account/UI checks are manual; the installer cannot grant ChatGPT access or confirm which tools your model chose.
+
 Fill this table after testing. This is the evidence needed to call your installation ready.
 
 | Check | Result to record |
@@ -247,6 +261,7 @@ Fill this table after testing. This is the evidence needed to call your installa
 | Roots | Actual Projects/Vault folders reviewed |
 | Connection | Green in the tray |
 | ChatGPT discovery | Celious Files selectable and tools available |
+| Optional Second Brain | 27 tools, reviewed initialized layout, clean inspection, synthetic project/archive and scoped source citation |
 | File operations | Create, read, edit, move, delete and restore passed |
 | OFF/ON | Fresh calls fail OFF and work ON |
 | Panel close | Connection remains available while panel is hidden |

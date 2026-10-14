@@ -59,5 +59,10 @@ class PackageTests(unittest.TestCase):
             self.assertEqual((live/'service/config.json').read_bytes(),config)
             self.assertFalse((live/'service/second_brain.py').exists())
             self.assertEqual(len(list(backup.glob('*/failed-new-files/service/second_brain.py'))),1)
+            with patch.object(upgrade,'BASE',source),patch('sys.argv',argv),redirect_stdout(io.StringIO()):
+                upgrade.main()
+            self.assertEqual((live/'LICENSE').read_bytes(),(source/'LICENSE').read_bytes())
+            self.assertEqual((live/'service/engine.py').read_bytes(),b'new module')
+            self.assertEqual(json.loads((live/'service/config.json').read_bytes())['roots'],json.loads(config)['roots'])
 
 if __name__=='__main__':unittest.main(verbosity=2)

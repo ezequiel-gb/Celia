@@ -8,7 +8,7 @@ import re
 import zipfile
 
 BASE = Path(__file__).resolve().parent
-FILES = ['README.md', 'TROUBLESHOOTING.md', 'SECURITY.md', 'PUBLISHING.md', 'VALIDATION.md',
+FILES = ['LICENSE', 'README.md', 'TROUBLESHOOTING.md', 'SECURITY.md', 'PUBLISHING.md', 'VALIDATION.md',
          'INSTALLATION-A-TO-Z.md', 'PROJECT-EXPLAINED.md', 'SECOND-BRAIN.md', 'PROJECT-MEMORY.md',
          '.gitignore', '.github/workflows/windows.yml', 'setup.py', 'upgrade.py', 'package.py', 'test_installation.py', 'test_package.py',
          'Install.cmd', 'Start-Celious.cmd']
